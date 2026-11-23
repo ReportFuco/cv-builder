@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=../../../cv-builder/schema/version.schema.json
+# Versión «<objetivo>». Datos en ../perfil.yaml; aquí solo se elige, ordena y redacta.
+objetivo: <data | desarrollo | automatizacion | procesos | operaciones | liderazgo | infraestructura>
+# cargo_buscado: <Cargo del aviso>
+# aviso: <URL o texto de la oferta>
+idioma: es
+pais: CL
+plantilla: ola                     # ola o lateral (dos columnas); ruta o clasica (una; clasica = máximo ATS)
+# tema: { paleta: petroleo, fuentes: serifa, escala: 1 }   # opcional (templates/temas.yaml); más fácil con el estudio
+foto: false                        # en Chile lo estándar es sin foto
+breve: true                        # usa el campo short de los logros
+paginas_max: 1
+
+label: <Rol objetivo> | <Herramienta>, <Herramienta>, <Herramienta>
+summary: >-
+  <2-4 líneas para este objetivo, con un logro y su cifra.>
+
+secciones: [work, projects]
+secciones_lateral: [skills, education, certificates, languages]
+
+work:                              # en orden; { id, max } o { id, highlights: [índices] } o { id, compact: true }
+  - { id: <empresa-area>, max: 3 }
+
+projects: []                       # nombres exactos del perfil, o { name, max }
+project_highlights: 0              # logros por proyecto (0 = solo descripción)
+skills: [<Grupo>]                  # grupos del perfil, en orden
+skills_omit: []
+max_certificates: 3

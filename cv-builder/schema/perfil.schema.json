@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "perfil.schema.json",
+  "title": "Perfil base de una persona (JSON Resume extendido)",
+  "description": "perfiles/<persona>/perfil.yaml. Única fuente de verdad: todo lo que la persona ha hecho, sin recortar. Detalle en schema/README.md.",
+  "type": "object",
+  "required": ["basics", "work", "education", "skills", "languages"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "basics": { "$ref": "#/$defs/basics" },
+    "work": { "type": "array", "items": { "$ref": "#/$defs/work" } },
+    "education": { "type": "array", "items": { "$ref": "#/$defs/education" } },
+    "certificates": { "type": "array", "items": { "$ref": "#/$defs/certificate" } },
+    "projects": { "type": "array", "items": { "$ref": "#/$defs/project" } },
+    "skills": { "type": "array", "items": { "$ref": "#/$defs/skill" } },
+    "languages": { "type": "array", "items": { "$ref": "#/$defs/language" } },
+    "volunteer": { "type": "array" },
+    "awards": { "type": "array" },
+    "publications": { "type": "array" },
+    "interests": { "type": "array" },
+    "references": { "type": "array" },
+    "meta": { "type": "object" },
+    "pending": {
+      "description": "Preguntas abiertas: datos que faltan o no cuadran. Se recorren con la persona antes de cerrar una versión.",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "$defs": {
+    "date": {
+      "description": "ISO 8601 AAAA-MM (o AAAA). Sin endDate = actual.",
+      "type": ["string", "null"],
+      "pattern": "^\\d{4}(-(0[1-9]|1[0-2]))?$"
+    },
+    "id": {
+      "description": "kebab-case en minúsculas, sin tildes: empresa-area (distribuidora-bi).",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "tag": {
+      "description": "Vocabulario cerrado. Para sumar uno: agregarlo aquí, en schema/README.md y en references/objetivos.md.",
+      "enum": ["data", "automatizacion", "desarrollo", "procesos", "logistica", "liderazgo", "ia", "gestion", "infraestructura", "seguridad"]
+    },
+    "tags": { "type": "array", "items": { "$ref": "#/$defs/tag" }, "uniqueItems": true },
+    "source": {
+      "description": "De dónde salió el dato. Formatos: cv-AAAA, linkedin-AAAA-MM, github:<repo>, fuentes/<archivo>, entrevista-AAAA-MM-DD, servidor, sitio:<dominio>. Varias se separan con ' + '.",
+      "type": "string"
+    },
+    "highlight": {
+      "description": "Un logro. Fórmula XYZ: logré X, medido por Y, haciendo Z.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["text"],
+          "additionalProperties": false,
+          "properties": {
+            "text": { "type": "string", "minLength": 10 },
+            "short": { "type": "string", "description": "Versión breve (≤ ~90 caracteres) con la cifra; la usan las versiones con breve: true." },
+            "metric": { "type": ["string", "null"], "description": "La cifra del logro. null = falta (el validador y el render lo avisan)." },
+            "priority": { "type": "integer", "minimum": 1, "maximum": 9, "description": "1 = el más fuerte." },
+            "tags": { "$ref": "#/$defs/tags" },
+            "source": { "$ref": "#/$defs/source" }
+          }
+        }
+      ]
+    },
+    "basics": {
+      "type": "object",
+      "required": ["name", "label", "email", "location"],
+      "properties": {
+        "name": { "type": "string", "description": "Nombre corto que va en el CV." },
+        "fullName": { "type": "string" },
+        "label": { "type": "string" },
+        "image": { "type": ["string", "null"], "description": "Ruta relativa a la carpeta de la persona (foto.jpg)." },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "url": { "type": ["string", "null"] },
+        "summary": { "type": "string" },
+        "location": {
+          "type": "object",
+          "required": ["city", "countryCode"],
+          "properties": {
+            "city": { "type": "string", "description": "Comuna y ciudad. Nunca la dirección." },
+            "region": { "type": "string" },
+            "countryCode": { "type": "string", "pattern": "^[A-Z]{2}$" }
+          },
+          "not": { "anyOf": [{ "required": ["address"] }, { "required": ["postalCode"] }] }
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["network", "url"],
+            "properties": {
+              "network": { "type": "string" },
+              "username": { "type": "string" },
+              "url": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "work": {
+      "type": "object",
+      "required": ["id", "name", "position", "startDate"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string" },
+        "position": { "type": "string" },
+        "department": { "type": "string" },
+        "location": { "type": "string" },
+        "url": { "type": ["string", "null"] },
+        "startDate": { "$ref": "#/$defs/date" },
+        "endDate": { "$ref": "#/$defs/date" },
+        "summary": { "type": "string" },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "highlights": { "type": "array", "items": { "$ref": "#/$defs/highlight" } },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "education": {
+      "type": "object",
+      "required": ["institution"],
+      "properties": {
+        "institution": { "type": "string" },
+        "title": { "type": "string", "description": "Si existe, reemplaza a «studyType en area»." },
+        "studyType": { "type": "string" },
+        "area": { "type": "string" },
+        "startDate": { "$ref": "#/$defs/date" },
+        "endDate": { "$ref": "#/$defs/date" },
+        "status": { "enum": ["en_curso", "completado", "titulado", "egresado", "incompleto", null] },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "certificate": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "issuer": { "type": ["string", "null"] },
+        "date": { "$ref": "#/$defs/date" },
+        "url": { "type": ["string", "null"] },
+        "always": { "type": "boolean", "description": "Va en todas las versiones." },
+        "tags": { "$ref": "#/$defs/tags" },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "project": {
+      "type": "object",
+      "required": ["name", "description"],
+      "properties": {
+        "name": { "type": "string", "description": "Las versiones lo referencian por este nombre exacto." },
+        "description": { "type": "string" },
+        "short": { "type": "string" },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "url": { "type": ["string", "null"] },
+        "repos": { "type": "array", "items": { "type": "string", "pattern": "^[\\w.-]+/[\\w.-]+$" } },
+        "public": { "type": "boolean", "description": "true = el primer repo es público y se enlaza si no hay url." },
+        "startDate": { "$ref": "#/$defs/date" },
+        "endDate": { "$ref": "#/$defs/date" },
+        "result": { "type": ["string", "null"], "description": "Métrica, usuarios o hallazgo. Sin result el proyecto no debería mostrarse." },
+        "highlights": { "type": "array", "items": { "$ref": "#/$defs/highlight" } },
+        "tags": { "$ref": "#/$defs/tags" },
+        "source": { "$ref": "#/$defs/source" }
+      }
+    },
+    "skill": {
+      "type": "object",
+      "required": ["name", "keywords"],
+      "properties": {
+        "name": { "type": "string", "description": "Nombre del grupo; las versiones lo referencian así." },
+        "keywords": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "tags": { "$ref": "#/$defs/tags" }
+      }
+    },
+    "language": {
+      "type": "object",
+      "required": ["language", "fluency"],
+      "properties": {
+        "language": { "type": "string" },
+        "fluency": { "type": "string" },
+        "cefr": { "enum": ["A1", "A2", "B1", "B2", "C1", "C2", null] }
+      }
+    }
+  }
+}

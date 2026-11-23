@@ -1,0 +1,86 @@
+/* Banner de LinkedIn: 1584 × 396 px (4:1). Colores y fuentes vienen del tema (templates/temas.yaml), igual que el CV.
+   LinkedIn lo muestra a ~50 % en escritorio y ~25 % en el celular: poco texto y grande (mínimo 22 px).
+   Zona prohibida: abajo a la izquierda (foto de perfil). El texto va en la franja derecha. */
+:root {
+  --c-primary: #163A56; --c-secondary: #2E5E84; --c-soft: #9CC0DC; --c-ink: #1D2B38;
+  --c-muted: #556677; --c-rule: #CBD8E4; --c-paper: #FFFFFF; --c-panel: #F4F7FA;
+  --f-head: Arial, sans-serif; --f-body: Arial, sans-serif;
+  --head-transform: none; --head-tracking: 0; --head-weight: 700;
+
+  --text-left: 560px;     /* el texto parte aquí: a la izquierda queda la foto */
+  --text-right: 104px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1584px; height: 396px; overflow: hidden; }
+body { font-family: var(--f-body); -webkit-font-smoothing: antialiased; }
+.canvas { position: relative; width: 1584px; height: 396px; overflow: hidden; }
+
+.deco { position: absolute; inset: 0; }
+.content {
+  position: absolute; top: 0; bottom: 0; left: var(--text-left); right: var(--text-right);
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-end; text-align: right;
+}
+
+h1, .frase, .val, .eyebrow { font-family: var(--f-head); font-weight: var(--head-weight); }
+h1, .frase, .cap, .name { text-wrap: balance; }
+h1 {
+  font-size: 58px; line-height: 1.04; letter-spacing: var(--head-tracking); text-transform: var(--head-transform);
+  max-width: 900px;
+}
+.tools { font-size: 26px; margin-top: 12px; letter-spacing: 0.01em; }
+.url { font-size: 22px; margin-top: 22px; letter-spacing: 0.02em; }
+
+/* ---------- cifras: fondo de color, tres logros con número ---------- */
+.e-cifras .canvas { background: var(--c-primary); color: var(--c-paper); }
+.e-cifras .deco {
+  /* trama de puntos que se desvanece hacia el texto */
+  background-image: radial-gradient(color-mix(in srgb, var(--c-soft) 45%, transparent) 2px, transparent 2.4px);
+  background-size: 26px 26px;
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 22%, transparent 46%);
+          mask-image: linear-gradient(90deg, #000 0%, #000 22%, transparent 46%);
+}
+.e-cifras .tools, .e-cifras .url { color: var(--c-soft); }
+.stats { list-style: none; display: flex; gap: 0; margin-top: 30px; }
+.stats li { display: flex; flex-direction: column; align-items: flex-end; padding: 0 0 0 34px; max-width: 290px; }
+.stats li + li { margin-left: 34px; border-left: 2px solid color-mix(in srgb, var(--c-soft) 40%, transparent); }
+.val { font-size: 50px; line-height: 1; white-space: nowrap; }
+.cap { font-size: 22px; line-height: 1.2; margin-top: 8px; color: var(--c-soft); }
+.frase.small { font-size: 30px; line-height: 1.25; margin-top: 26px; max-width: 860px; font-weight: 500; }
+
+/* ---------- ruta: fondo claro y la trayectoria como paradas ---------- */
+.e-ruta .canvas { background: var(--c-paper); color: var(--c-ink); }
+.e-ruta .orb { position: absolute; width: 560px; height: 560px; left: -170px; top: -250px; border-radius: 50%;
+             background: color-mix(in srgb, var(--c-soft) 38%, var(--c-paper)); }
+.e-ruta .orb.small { width: 220px; height: 220px; left: 330px; top: 230px; background: color-mix(in srgb, var(--c-soft) 22%, var(--c-paper)); }
+.e-ruta h1 { color: var(--c-primary); }
+.e-ruta .tools, .e-ruta .url { color: var(--c-muted); }
+.route { list-style: none; display: flex; margin-top: 36px; }
+.route li { position: relative; display: flex; flex-direction: column; align-items: center; width: 210px; text-align: center; }
+.route li::before { content: ""; position: absolute; top: 10px; left: -50%; width: 100%; height: 3px; background: var(--c-rule); }
+.route li:first-child::before { display: none; }
+.dot { position: relative; width: 23px; height: 23px; border-radius: 50%; background: var(--c-paper);
+       border: 3px solid var(--c-secondary); }
+.route li.now .dot { background: var(--c-primary); border-color: var(--c-primary); box-shadow: 0 0 0 6px color-mix(in srgb, var(--c-soft) 45%, transparent); }
+.name { font-size: 23px; font-weight: 650; margin-top: 12px; line-height: 1.15; }
+.year { font-size: 22px; color: var(--c-muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.route li.now .name { color: var(--c-primary); }
+
+/* ---------- frase: el resumen como protagonista ---------- */
+.e-frase .canvas { color: var(--c-ink);
+  background: linear-gradient(100deg, color-mix(in srgb, var(--c-soft) 55%, var(--c-paper)) 0%, var(--c-paper) 55%); }
+.e-frase .deco { border-left: 14px solid var(--c-primary); }
+.eyebrow { font-size: 24px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-secondary); }
+.e-frase .frase { font-size: 40px; line-height: 1.2; margin-top: 14px; max-width: 920px; color: var(--c-primary); }
+.e-frase .tools, .e-frase .url { color: var(--c-muted); }
+
+/* ---------- capa de control: lo que tapa LinkedIn (solo en «-zonas») ---------- */
+.zones { display: none; }
+body.zonas .zones { display: block; }
+.zones .photo { position: absolute; left: 40px; top: 160px; width: 320px; height: 320px; border-radius: 50%;
+                background: rgba(220, 30, 30, .22); border: 3px dashed #D01E1E; }
+.zones .photo span { position: absolute; left: 50%; top: 70px; transform: translateX(-50%); white-space: nowrap;
+                     font: 600 18px Arial, sans-serif; color: #fff; background: #D01E1E; padding: 2px 8px; border-radius: 4px; }
+.zones .edge { position: absolute; top: 0; bottom: 0; width: 80px; background: repeating-linear-gradient(45deg,
+               rgba(220,30,30,.16) 0 8px, transparent 8px 16px); }
+.zones .edge.left { left: 0; } .zones .edge.right { right: 0; }

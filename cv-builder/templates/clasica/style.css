@@ -1,0 +1,105 @@
+/* Plantilla «clasica»: máximo ATS, inspirada en Jake's Resume. Una columna, sin fondos de color, sin íconos.
+   Títulos en versalitas con una línea fina; fechas a la derecha. Colores y fuentes vienen del tema
+   (templates/temas.yaml, por defecto «grafito» + «serifa»); los valores de abajo son solo el respaldo. */
+:root {
+  /* Colores semánticos (los reemplaza el tema). En la clásica casi todo es tinta. */
+  --c-primary: #111111;    /* nombre, títulos y su línea */
+  --c-secondary: #333333;  /* titular */
+  --c-soft: #F2F2F2;
+  --c-ink: #1A1A1A;
+  --c-muted: #4A4A4A;      /* fechas, lugares, stack */
+  --c-rule: #111111;
+  --c-paper: #FFFFFF;
+  --c-panel: #FFFFFF;
+  --mark: #FFE58A;
+
+  --f-head: Georgia, "Times New Roman", serif;
+  --f-body: Georgia, "Times New Roman", serif;
+  --head-weight: 700;
+
+  --s-name: 24pt;
+  --s-label: 10.5pt;
+  --s-h2: 11.5pt;
+  --s-h3: 10pt;
+  --s-body: 9.4pt;
+  --s-small: 8.8pt;
+  --gap: 3.4mm;              /* entre secciones */
+}
+
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--c-paper); }
+body {
+  font-family: var(--f-body);
+  font-size: var(--s-body);
+  line-height: 1.26;
+  color: var(--c-ink);
+  background: var(--c-paper);
+  font-variant-numeric: lining-nums;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+a { color: inherit; text-decoration: underline; text-decoration-thickness: 0.5px; text-underline-offset: 1.5px; }
+strong { font-weight: 700; }
+
+.page { width: 210mm; min-height: 297mm; padding: 11mm 14mm 9mm; }
+
+/* Encabezado centrado. Con foto: texto a la izquierda y foto a la derecha (en flujo, sin position). */
+.head { text-align: center; }
+.head.with-photo { display: flex; justify-content: space-between; align-items: center; gap: 8mm; text-align: left; }
+h1 {
+  font-family: var(--f-head);
+  font-size: var(--s-name);
+  font-weight: var(--head-weight);
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  color: var(--c-primary);
+}
+.label { font-family: var(--f-head); font-size: var(--s-label); color: var(--c-secondary); margin-top: 1mm; }
+.contact { font-size: var(--s-small); margin-top: 1.4mm; }
+.sep { color: var(--c-muted); }
+.summary { margin-top: 2.6mm; }
+.photo { width: 24mm; height: 24mm; object-fit: cover; object-position: center 30%; border-radius: 50%; flex: none; }
+
+/* Secciones */
+section { margin-top: var(--gap); }
+h2 {
+  font-family: var(--f-head);
+  font-size: var(--s-h2);
+  font-weight: var(--head-weight);
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  color: var(--c-primary);
+  border-bottom: 0.6pt solid var(--c-rule);
+  padding-bottom: 0.4mm;
+  margin-bottom: 1.4mm;
+}
+h3 { font-family: var(--f-head); font-size: var(--s-h3); font-weight: var(--head-weight); }
+
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; }
+.row > p { min-width: 0; }
+.sub { font-style: italic; }
+.date, .where { flex: none; white-space: nowrap; font-variant-numeric: tabular-nums lining-nums; font-size: var(--s-small); }
+.where { color: var(--c-muted); }
+.context { font-style: italic; color: var(--c-muted); margin-top: 0.3mm; }
+
+.entry { break-inside: avoid; }
+.entry + .entry { margin-top: 1.6mm; }
+.entry.compact + .entry.compact { margin-top: 0.6mm; }
+.entry.tight + .entry.tight { margin-top: 1mm; }
+
+.hl { margin-top: 0.6mm; padding-left: 4.5mm; }
+.hl li { padding-left: 0.6mm; }
+.hl li + li { margin-top: 0.3mm; }
+.hl li::marker { content: "• "; font-size: 0.85em; }
+
+.pname { font-family: var(--f-head); }
+.stack { color: var(--c-muted); }
+.plink { flex: none; font-size: var(--s-small); white-space: nowrap; }
+.desc { margin-top: 0.4mm; }
+
+.plain { list-style: none; }
+.plain li + li { margin-top: 0.4mm; }
+
+/* Modo borrador: marca lo que falta */
+mark { background: var(--mark); color: var(--c-ink); font-size: var(--s-small); padding: 0 1mm; border-radius: 1mm; }

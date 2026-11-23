@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../../cv-builder/schema/perfil.schema.json
+# Perfil base de <Nombre> — JSON Resume extendido (ver cv-builder/schema/README.md).
+# Única fuente de verdad: TODO lo que la persona ha hecho, sin recortar. Las versiones (cvs/*.yaml) solo eligen.
+# Fuentes: <cv-AAAA (archivo)>, <linkedin-AAAA-MM (captura/export)>, <github:usuario>.
+# Si dos fuentes no coinciden, manda la más reciente y la duda va a `pending`.
+
+basics:
+  name: <Nombre Apellido>          # el que va en el CV
+  fullName: <Nombres Apellidos>
+  label: <Cargo actual o rol al que apunta>
+  image: null                      # foto.jpg en esta carpeta; en Chile no se muestra por defecto
+  email: <correo>
+  phone: "<+56 9 ...>"
+  location: { city: "<Comuna, Ciudad>", region: <Región>, countryCode: CL }   # nunca la dirección
+  summary: >-
+    <Una o dos frases: a qué se dedica y en qué es fuerte.>
+  profiles:
+    - { network: LinkedIn, username: <usuario>, url: "https://www.linkedin.com/in/<usuario>" }
+    # - { network: GitHub, username: <usuario>, url: "https://github.com/<usuario>" }
+
+work:                              # del más reciente al más antiguo
+  - id: <empresa-area>             # kebab-case, sin tildes; las versiones lo usan
+    name: <Empresa>
+    position: <Cargo>
+    startDate: <AAAA-MM>
+    endDate: null                  # null o ausente = cargo actual
+    location: <Comuna, Ciudad (modalidad)>
+    keywords: []
+    highlights:                    # fórmula XYZ: logré X, medido por Y, haciendo Z
+      - text: <Verbo en pretérito + qué + cuánto + cómo.>
+        short: "<Lo mismo en ≤ 90 caracteres, con la cifra.>"
+        metric: null               # la cifra («de 6 h a 25 min»); null = falta y se pregunta
+        priority: 2                # 1 = el más fuerte
+        tags: []                   # data, automatizacion, desarrollo, procesos, logistica, liderazgo, ia, gestion, infraestructura, seguridad
+        source: <cv-AAAA | linkedin-AAAA-MM | entrevista-AAAA-MM-DD>
+    source: <linkedin-AAAA-MM>
+
+education:
+  - institution: <Institución>
+    studyType: <Ingeniería | Técnico | Magíster ...>
+    area: <Carrera>
+    startDate: <AAAA-MM>
+    endDate: <AAAA-MM>             # si está en curso, la fecha esperada
+    status: en_curso               # en_curso | completado | titulado | egresado | incompleto
+
+certificates: []                   # { name, issuer, date: AAAA-MM, url, always: true si va en todas, tags }
+
+projects: []                       # { name, description, short, keywords, url, repos: [usuario/repo], public, startDate, result, highlights, tags, source }
+
+skills:                            # agrupadas; sin niveles ni barras
+  - { name: <Grupo>, keywords: [<Herramienta exacta>], tags: [] }
+
+languages:
+  - { language: Español, fluency: Nativo }
+  # - { language: Inglés, fluency: Intermedio, cefr: B1 }   # MCER: A1–C2
+
+pending:                           # lo que falta preguntar
+  - "Métricas de cada logro: volumen, tiempo ahorrado, %, usuarios."

@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=../../cv-builder/schema/perfil.schema.json
+# PERSONA FICTICIA para probar la skill. Nombres, empresas, cifras y contacto son inventados.
+# Prueba: python cv-builder/scripts/render.py perfiles/ejemplo/cvs/data.yaml
+
+basics:
+  name: Camila Rojas
+  fullName: Camila Andrea Rojas Fuentes
+  label: Analista de Datos
+  image: null
+  email: camila.rojas@example.com
+  phone: "+56 9 0000 0000"
+  location: { city: "Ñuñoa, Santiago", region: Región Metropolitana, countryCode: CL }
+  summary: >-
+    Analista de datos que convierte reportes manuales en tableros y procesos automáticos.
+  profiles:
+    - { network: LinkedIn, username: camila-ejemplo, url: "https://example.com/linkedin/camila-ejemplo" }
+    - { network: GitHub, username: camila-ejemplo, url: "https://example.com/github/camila-ejemplo" }
+
+work:
+  - id: distribuidora-bi
+    name: Distribuidora Ejemplo S.A.
+    position: Analista de Datos
+    startDate: 2024-03
+    location: Santiago (híbrido)
+    keywords: [SQL Server, Power BI, Python]
+    highlights:
+      - text: Automaticé con Python y SQL Server los 14 reportes semanales de ventas, bajando su preparación de 6 h a 25 min.
+        short: "Automaticé 14 reportes semanales: de 6 h a 25 min."
+        metric: "14 reportes, 6 h → 25 min"
+        priority: 1
+        tags: [data, automatizacion]
+        source: entrevista-2026-11-22
+      - text: Construí 5 tableros en Power BI usados por 40 personas de ventas y logística para decidir la reposición diaria.
+        short: "5 tableros en Power BI usados por 40 personas."
+        metric: "5 tableros, 40 usuarios"
+        priority: 1
+        tags: [data, procesos]
+        source: entrevista-2026-11-22
+      - text: Subí la calidad de los datos de productos del 72 % al 96 % con reglas de validación en el proceso de carga.
+        short: "Calidad de datos de productos: del 72 % al 96 %."
+        metric: "72 % → 96 %"
+        priority: 2
+        tags: [data, procesos]
+        source: entrevista-2026-11-22
+    source: entrevista-2026-11-22
+
+  - id: financiera-operaciones
+    name: Financiera Demo
+    position: Asistente de Operaciones
+    startDate: 2022-01
+    endDate: 2024-02
+    location: Santiago (presencial)
+    keywords: [Excel, VBA]
+    highlights:
+      - text: Automaticé con macros de Excel la conciliación diaria de ~3.000 movimientos, eliminando 2 h de trabajo manual al día.
+        short: "Conciliación diaria de ~3.000 movimientos con macros: 2 h menos al día."
+        metric: "~3.000 movimientos, 2 h/día"
+        priority: 1
+        tags: [automatizacion, procesos]
+        source: entrevista-2026-11-22
+    source: entrevista-2026-11-22
+
+  - id: universidad-ayudantia
+    name: Universidad de Ejemplo
+    position: Ayudante de Estadística
+    startDate: 2020-08
+    endDate: 2021-12
+    highlights: []
+    source: entrevista-2026-11-22
+
+education:
+  - institution: Universidad de Ejemplo
+    studyType: Ingeniería
+    area: Civil Industrial
+    title: Ingeniería Civil Industrial
+    startDate: 2017-03
+    endDate: 2021-12
+    status: titulado
+
+certificates:
+  - { name: "Power BI Data Analyst", issuer: Microsoft, date: 2024-06, tags: [data] }
+  - { name: "SQL para análisis de datos", issuer: Plataforma Demo, date: 2023-05, tags: [data] }
+
+projects:
+  - name: Tablero de precios del retail
+    description: Scraper y tablero que compara precios de 200 productos en 4 cadenas, actualizado cada día.
+    short: "Compara precios de 200 productos en 4 cadenas, todos los días."
+    keywords: [Python, Playwright, PostgreSQL, Power BI]
+    url: "https://example.com/proyectos/precios"
+    startDate: 2025-02
+    result: Lo usan 3 pymes para fijar sus precios semanales.
+    tags: [data, automatizacion]
+    source: entrevista-2026-11-22
+
+skills:
+  - { name: Datos, keywords: [SQL Server, PostgreSQL, Power BI, Excel], tags: [data] }
+  - { name: Programación, keywords: [Python, Pandas, Playwright, VBA], tags: [data, automatizacion] }
+
+languages:
+  - { language: Español, fluency: Nativo }
+  - { language: Inglés, fluency: Intermedio, cefr: B2 }
+
+pending: []

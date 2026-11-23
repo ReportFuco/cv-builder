@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="{{ t.lang }}">
+<head>
+<meta charset="utf-8">
+<title>{{ b.name }} | CV</title>
+<style>{{ css | safe }}</style>
+</head>
+<body class="{{ 'borrador' if draft else '' }}">
+<main class="page">
+
+  <header class="head">
+    <div class="id">
+      <h1>{{ b.name }}</h1>
+      <p class="label">{{ label }}</p>
+      <ul class="contact">
+        {% if location %}<li>{{ location }}</li>{% endif %}
+        {% if b.phone %}<li><a href="tel:{{ b.phone | replace(' ', '') }}">{{ b.phone }}</a></li>{% endif %}
+        {% if b.email %}<li><a href="mailto:{{ b.email }}">{{ b.email }}</a></li>{% endif %}
+      </ul>
+      {% if b.profiles %}<ul class="contact links">
+        {% for p in b.profiles %}<li><a href="{{ p.url }}">{{ p.url | short }}</a></li>{% endfor %}
+      </ul>{% endif %}
+    </div>
+    {% if photo %}<img class="photo" src="{{ photo }}" alt="">{% endif %}
+  </header>
+
+  {% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
+
+  {% for s in sections %}
+  {% if s == 'work' and work %}
+  <section class="work">
+    <h2>{{ t.work }}</h2>
+    <ol class="route">
+      {% for w in work %}
+      {% if w.compact %}
+      <li class="stop compact">
+        <div class="row"><p><strong>{{ w.position }}</strong>, {{ w.name }}</p><span class="date">{{ w.dates }}</span></div>
+      </li>
+      {% else %}
+      <li class="stop{{ ' now' if w.current }}">
+        <div class="row"><h3>{{ w.position }}</h3><span class="date">{{ w.dates }}</span></div>
+        <p class="org">{{ w.name }}{% if w.location %}, {{ w.location }}{% endif %}</p>
+        {% if w.summary %}<p class="context">{{ w.summary }}</p>{% endif %}
+        {% if w.highlights %}
+        <ul class="hl">
+          {% for h in w.highlights %}<li>{{ h.text }}{% if draft and not h.metric %} <mark>falta cifra</mark>{% endif %}</li>{% endfor %}
+        </ul>
+        {% elif draft %}<p><mark>faltan logros</mark></p>{% endif %}
+      </li>
+      {% endif %}
+      {% endfor %}
+    </ol>
+  </section>
+
+  {% elif s == 'projects' and projects %}
+  <section class="projects">
+    <h2>{{ t.projects }}</h2>
+    {% for p in projects %}
+    <article class="project">
+      <div class="row"><p><strong class="pname">{{ p.name }}</strong>{% if p.keywords %} <span class="stack">{{ p.keywords | join(', ') }}</span>{% endif %}</p></div>
+      {% if p.bullets %}
+      <ul class="hl">{% for h in p.bullets %}<li>{{ h.text }}{% if loop.last and p.link %} <a class="plink" href="{{ p.link }}">{{ p.link | short }}</a>{% endif %}</li>{% endfor %}</ul>
+      {% else %}
+      <p>{{ p.description }}{% if p.result %} {{ p.result }}{% elif draft %} <mark>falta resultado</mark>{% endif %}{% if p.link %} <a class="plink" href="{{ p.link }}">{{ p.link | short }}</a>{% endif %}</p>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </section>
+
+  {% elif s == 'skills' and skills %}
+  <section class="skills">
+    <h2>{{ t.skills }}</h2>
+    <dl>
+      {% for g in skills %}<div><dt>{{ g.name }}</dt><dd>{{ g.keywords | join(', ') }}</dd></div>{% endfor %}
+      {% if 'languages' not in sections and languages %}<div><dt>{{ t.languages }}</dt><dd>{% for l in languages %}{{ l.language }} {{ l.level }}{{ ', ' if not loop.last }}{% endfor %}</dd></div>{% endif %}
+    </dl>
+  </section>
+
+  {% elif s == 'education' and education %}
+  <section class="education">
+    <h2>{{ t.education }}</h2>
+    {% for e in education %}
+    <div class="edu">
+      <div class="row"><p><strong>{{ e.title }}</strong>, {{ e.institution }}</p><span class="date">{{ e.dates }}</span></div>
+    </div>
+    {% endfor %}
+  </section>
+
+  {% elif s == 'certificates' and certificates %}
+  <section class="certificates">
+    <h2>{{ t.certificates }}</h2>
+    <ul class="plain">
+      {% for c in certificates %}<li class="row"><p><strong>{% if c.url %}<a href="{{ c.url }}">{{ c.name }}</a>{% else %}{{ c.name }}{% endif %}</strong>{% if c.issuer %}, {{ c.issuer }}{% endif %}</p><span class="date">{{ c.date }}</span></li>{% endfor %}
+    </ul>
+  </section>
+
+  {% elif s == 'languages' and languages %}
+  <section class="languages">
+    <h2>{{ t.languages }}</h2>
+    <p>{% for l in languages %}<strong>{{ l.language }}</strong>: {{ l.level }}{{ '. ' if not loop.last }}{% endfor %}</p>
+  </section>
+  {% endif %}
+  {% endfor %}
+
+</main>
+</body>
+</html>

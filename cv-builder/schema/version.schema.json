@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "version.schema.json",
+  "title": "Versión de CV",
+  "description": "perfiles/<persona>/cvs/<version>.yaml. Solo elige, ordena y redacta; los datos están en ../perfil.yaml. Cada clave está implementada en scripts/render.py: si se agrega una allá, se agrega aquí.",
+  "type": "object",
+  "required": ["objetivo", "idioma", "pais", "plantilla", "label", "summary"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "objetivo": {
+      "description": "Uno de references/objetivos.md. Define los tags que se priorizan.",
+      "enum": ["data", "desarrollo", "automatizacion", "procesos", "operaciones", "liderazgo", "infraestructura"]
+    },
+    "tags": {
+      "description": "Reemplaza los tags que trae el objetivo (para un aviso muy específico).",
+      "type": "array",
+      "items": { "$ref": "perfil.schema.json#/$defs/tag" }
+    },
+    "cargo_buscado": { "type": "string" },
+    "aviso": { "type": "string", "description": "Texto o URL de la oferta; de aquí salen las palabras clave." },
+    "idioma": { "enum": ["es", "en"] },
+    "pais": { "type": "string", "pattern": "^[A-Z]{2}$", "description": "ISO 3166. En CL la foto va apagada por defecto." },
+    "plantilla": { "type": "string", "description": "Carpeta en templates/ con cv.html.j2 y style.css." },
+    "tema": {
+      "description": "Paleta, par de fuentes y escala de templates/temas.yaml. Lo que falte sale de por_defecto[<plantilla>]. Lo escribe el estudio.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "paleta": { "type": "string" },
+        "fuentes": { "type": "string" },
+        "escala": { "type": "number", "minimum": 0.9, "maximum": 1.1, "description": "Escala inicial de los tamaños --s-* y --gap." }
+      }
+    },
+    "foto": { "type": "boolean" },
+    "breve": { "type": "boolean", "description": "Usa el campo short de logros y proyectos." },
+    "paginas_max": { "type": "integer", "minimum": 1, "maximum": 2 },
+
+    "label": { "type": "string", "description": "Titular: rol objetivo + 2-3 herramientas." },
+    "summary": { "type": "string", "description": "2-4 líneas, con un logro y su cifra." },
+
+    "secciones": { "$ref": "#/$defs/sections", "description": "Columna principal, en orden." },
+    "secciones_lateral": { "$ref": "#/$defs/sections", "description": "Columna lateral (plantillas de dos columnas)." },
+
+    "work": {
+      "description": "Cargos a mostrar, en orden. Un id solo, o un objeto con ajustes.",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "perfil.schema.json#/$defs/id" },
+          {
+            "type": "object",
+            "required": ["id"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "perfil.schema.json#/$defs/id" },
+              "max": { "type": "integer", "minimum": 0, "maximum": 6, "description": "Cuántos logros (por defecto 4)." },
+              "highlights": { "type": "array", "items": { "type": "integer", "minimum": 0 }, "description": "Índices exactos de logros (ignora max y tags)." },
+              "compact": { "type": "boolean", "description": "Una sola línea, sin logros." },
+              "position": { "type": "string", "description": "Reemplaza el cargo solo en esta versión." },
+              "summary": { "type": "string" }
+            }
+          }
+        ]
+      }
+    },
+    "projects": {
+      "description": "Lista de nombres (o {name, max}), o {max: n} para que elija por tags.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "string" },
+              {
+                "type": "object",
+                "required": ["name"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string" },
+                  "max": { "type": "integer", "minimum": 0, "description": "Logros de este proyecto." }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "max": { "type": "integer", "minimum": 0 } }
+        }
+      ]
+    },
+    "project_highlights": { "type": "integer", "minimum": 0, "description": "Logros por proyecto si no se fija max (0 = solo descripción)." },
+    "skills": { "type": "array", "items": { "type": "string" }, "description": "Nombres de grupos de skills del perfil, en orden." },
+    "skills_omit": { "type": "array", "items": { "type": "string" }, "description": "Herramientas que no se muestran en esta versión." },
+    "max_certificates": { "type": "integer", "minimum": 0 },
+    "banner": {
+      "description": "Banner de LinkedIn de esta versión (scripts/banner.py). Todo opcional: lo que falte sale de label, summary y work.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "estilo": { "enum": ["cifras", "ruta", "frase"], "description": "Si falta, se generan los tres." },
+        "titulo": { "type": "string", "description": "Por defecto, el label antes de «|»." },
+        "herramientas": { "type": "array", "items": { "type": "string" }, "maxItems": 4 },
+        "frase": { "type": "string", "maxLength": 140, "description": "Por defecto, la primera oración del summary. Ideal < 100 caracteres." },
+        "cifras": {
+          "description": "Hasta 3 logros con número, sacados del perfil (no inventar).",
+          "type": "array", "maxItems": 3,
+          "items": {
+            "type": "object", "required": ["valor", "texto"], "additionalProperties": false,
+            "properties": {
+              "valor": { "type": "string", "maxLength": 14, "description": "La cifra: «85 %», «6 h → 25 min»." },
+              "texto": { "type": "string", "maxLength": 45 }
+            }
+          }
+        },
+        "ruta": {
+          "description": "Paradas de la trayectoria. Por defecto, las empresas de work (sin las compact).",
+          "type": "array", "maxItems": 4,
+          "items": {
+            "type": "object", "required": ["nombre"], "additionalProperties": false,
+            "properties": { "nombre": { "type": "string" }, "anio": { "type": ["string", "integer"] }, "actual": { "type": "boolean" } }
+          }
+        },
+        "url": { "type": ["string", "null"], "description": "Por defecto, el perfil de GitHub. null = sin link." },
+        "tema": { "$ref": "#/properties/tema" }
+      }
+    }
+  },
+  "$defs": {
+    "sections": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["work", "projects", "skills", "education", "certificates", "languages"] }
+    }
+  }
+}

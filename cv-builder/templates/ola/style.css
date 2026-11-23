@@ -1,0 +1,110 @@
+/* Plantilla «ola»: encabezado de color con ola (wave.svg, coloreada por el tema) y foto montada;
+   cuerpo en dos columnas. El HTML va en orden de lectura; la lateral se ubica con grid.
+   Colores y fuentes vienen del tema (templates/temas.yaml); aquí solo valores por defecto. */
+:root {
+  --c-primary: #163A56; --c-secondary: #2E5E84; --c-soft: #9CC0DC; --c-ink: #1D2B38;
+  --c-muted: #556677; --c-rule: #CBD8E4; --c-paper: #FFFFFF; --c-panel: #FFFFFF;
+  --mark: #FFE58A;
+  --f-head: "Arial Narrow", Arial, sans-serif; --f-body: Arial, sans-serif;
+  --head-transform: uppercase; --head-tracking: 0.07em; --head-weight: 600;
+
+  --s-name: 31pt;
+  --s-label: 10.5pt;
+  --s-h2: 14pt;
+  --s-h3: 10pt;
+  --s-body: 9.4pt;
+  --s-small: 8.4pt;
+  --gap: 5.2mm;
+
+  --hero-h: 54mm;
+  --side-w: 64mm;
+  --pad-x: 11mm;
+}
+
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--c-paper); }
+body {
+  font-family: var(--f-body); font-size: var(--s-body); line-height: 1.38; color: var(--c-ink);
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+a { color: inherit; text-decoration: none; }
+strong { font-weight: 700; }
+
+/* Ojo ATS: Chrome escribe al final del PDF todo elemento posicionado. Solo la foto (sin texto) lo está;
+   la hoja es la referencia de posición y nada con texto lleva position. */
+.page { width: 210mm; min-height: 296mm; display: flex; flex-direction: column; position: relative; }
+
+/* Encabezado. La ola es fondo (wave.svg): así el nombre queda en el flujo normal y el PDF lo escribe primero. */
+.hero { height: var(--hero-h); flex: none; display: flex; justify-content: flex-end;
+  padding: 9mm var(--pad-x) 0 0; background: url("./wave.svg") center / 100% 100% no-repeat; }
+.photo {
+  position: absolute; left: 13mm; top: 9mm; width: 40mm; height: 40mm; border-radius: 50%;
+  object-fit: cover; object-position: center 30%;
+  border: 1.6mm solid var(--c-paper); box-shadow: 0 1mm 3mm rgba(15, 30, 45, .25);
+}
+.id { text-align: right; color: var(--c-paper); max-width: 125mm; }
+h1 {
+  font-family: var(--f-head); font-weight: var(--head-weight); font-size: var(--s-name); line-height: 1;
+  text-transform: var(--head-transform); letter-spacing: calc(var(--head-tracking) * 0.85);
+}
+.role {
+  font-family: var(--f-head); font-weight: 500; font-size: var(--s-label); text-transform: uppercase;
+  letter-spacing: 0.14em; margin-top: 1.4mm; color: var(--c-paper); opacity: .92;
+}
+.role + .role { margin-top: 0.3mm; color: var(--c-soft); opacity: 1; }
+
+/* Cuerpo: lateral a la izquierda (columna 1) aunque en el HTML vaya después */
+.body { flex: 1; display: grid; grid-template-columns: var(--side-w) 1fr; }
+.side { grid-column: 1; grid-row: 1; background: var(--c-panel); padding: 3mm 5mm 10mm var(--pad-x); border-right: 0.3mm solid var(--c-rule); }
+.main { grid-column: 2; grid-row: 1; padding: 2mm var(--pad-x) 10mm 8mm; }
+
+h2 {
+  font-family: var(--f-head); font-weight: var(--head-weight); font-size: var(--s-h2); line-height: 1;
+  text-transform: var(--head-transform); letter-spacing: var(--head-tracking); color: var(--c-primary);
+  margin-bottom: 2.2mm; display: flex; align-items: center; gap: 2.5mm;
+}
+.main h2::after { content: ""; flex: 1; height: 0.35mm; background: var(--c-rule); }
+section + section { margin-top: var(--gap); }
+h3 { font-size: var(--s-h3); font-weight: 800; color: var(--c-primary); line-height: 1.25; }
+.date { color: var(--c-muted); font-size: var(--s-small); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.org { font-style: italic; color: var(--c-secondary); font-weight: 600; display: flex; justify-content: space-between; gap: 3mm; }
+.org .date { font-style: normal; font-weight: 400; }
+
+/* La ruta: línea vertical con una parada por cargo */
+.route { list-style: none; padding-left: 5mm;
+  background: linear-gradient(var(--c-rule), var(--c-rule)) 1.05mm 1.4mm / 0.3mm calc(100% - 2.8mm) no-repeat; }
+.stop { break-inside: avoid; }
+.stop + .stop { margin-top: 2.4mm; }
+.stop::before {   /* el punto: absoluto sin left/top (queda en su posición estática); no tiene texto, no altera el orden */
+  content: ""; position: absolute; margin: 0.9mm 0 0 -5mm; width: 2.6mm; height: 2.6mm; border-radius: 50%;
+  background: var(--c-paper); border: 0.35mm solid var(--c-secondary);
+}
+.stop.now::before { background: var(--c-primary); border-color: var(--c-primary); }
+.stop.compact { display: flex; justify-content: space-between; gap: 3mm; }
+.stop.compact::before { width: 1.8mm; height: 1.8mm; margin: 1.2mm 0 0 -4.6mm; border-color: var(--c-soft); }
+.stop.compact + .stop.compact { margin-top: 1mm; }
+
+.hl { margin-top: 0.8mm; padding-left: 3.4mm; }
+.hl li { margin-top: 0.4mm; }
+.hl li::marker { color: var(--c-secondary); }
+
+.project + .project { margin-top: 2.4mm; }
+.project p { margin-top: 0.4mm; }
+.stack { font-size: var(--s-small); color: var(--c-muted); }
+.stack a { color: var(--c-secondary); font-weight: 700; white-space: nowrap; }
+
+/* Lateral */
+.side h2 { font-size: calc(var(--s-h2) * 0.92); }
+.contact ul { list-style: none; display: grid; gap: 1.6mm; }
+/* Cada dato de contacto en UNA línea (render.py verifica que no se corten). */
+.contact li { display: grid; grid-template-columns: 3.6mm 1fr; gap: 1.8mm; align-items: center; font-size: var(--s-small); }
+.contact a, .contact span { color: var(--c-ink); white-space: nowrap; letter-spacing: -0.005em; }
+.ico { width: 3.6mm; height: 3.6mm; color: var(--c-primary); }
+.group + .group { margin-top: 1.8mm; }
+.side .group h3 { font-size: var(--s-small); color: var(--c-primary); }
+.skills .group h3 { text-transform: uppercase; letter-spacing: 0.05em; color: var(--c-secondary); }
+.side p { font-size: var(--s-small); }
+.languages p + p { margin-top: 0.6mm; }
+
+mark { background: var(--mark); color: var(--c-ink); font-size: var(--s-small); padding: 0 1mm; border-radius: 1mm; }

@@ -1,0 +1,347 @@
+<title>Elige tu CV</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: la hoja manda a la izquierda; a la derecha, tres decisiones apiladas (plantilla, color, letra) y las acciones. */
+@font-face { font-family: "Muestra Condensada"; src: url("fonts/BarlowCondensed-SemiBold.ttf"); font-weight: 600; }
+@font-face { font-family: "Muestra Grotesca"; src: url("fonts/SchibstedGrotesk.ttf"); font-weight: 400 900; }
+@font-face { font-family: "Muestra Serifa"; src: url("fonts/SourceSerif4.ttf"); font-weight: 200 900; }
+@font-face { font-family: "UI"; src: url("fonts/PublicSans.ttf"); font-weight: 100 900; }
+
+:root {
+  --ground: #EDF1F5;
+  --surface: #FFFFFF;
+  --ink: #1C2733;
+  --muted: #586677;
+  --line: #D2DBE4;
+  --accent: #163A56;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E2EBF3;
+  --ok: #1F7A4D;
+  --shadow: 0 1px 2px rgba(22,40,60,.08), 0 10px 30px rgba(22,40,60,.12);
+  --f-ui: "UI", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #0E151C; --surface: #17212B; --ink: #E5ECF2; --muted: #9BA9B7; --line: #2A3846;
+    --accent: #9CC0DC; --accent-ink: #0E151C; --accent-soft: #1C2E3E; --ok: #5CC98F;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #0E151C; --surface: #17212B; --ink: #E5ECF2; --muted: #9BA9B7; --line: #2A3846;
+  --accent: #9CC0DC; --accent-ink: #0E151C; --accent-soft: #1C2E3E; --ok: #5CC98F;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--f-ui); font-size: 15px; line-height: 1.5; }
+.wrap {
+  max-width: 1200px; margin: 0 auto; display: grid; gap: 20px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 48px;
+}
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; }
+h1 { margin: 0; font-size: clamp(24px, 3.4vw, 32px); line-height: 1.1; letter-spacing: -0.01em; text-wrap: balance; }
+.sub { margin: 4px 0 0; color: var(--muted); }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button {
+  border: 1px solid var(--line); background: var(--surface); padding: 7px 13px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 14px;
+}
+.seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.who { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
+.who select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 24px; align-items: start; }
+.sheet { position: relative; background: #fff; border-radius: 4px; box-shadow: var(--shadow); overflow: hidden; }
+.cv { width: 100%; aspect-ratio: 600 / 849; background-color: #fff; background-repeat: no-repeat; transition: opacity .2s ease; }
+.sheet.loading .cv { opacity: .4; }
+.badge {
+  position: absolute; top: 12px; left: 12px; background: var(--surface); color: var(--ink); border: 1px solid var(--line);
+  font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px;
+}
+.badge.ok { color: var(--ok); }
+
+.panel { display: grid; gap: 18px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); min-width: 0; }
+fieldset { margin: 0; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); display: grid; gap: 10px; min-width: 0; }
+legend { padding: 0 6px; font-weight: 700; font-size: 15px; }
+.hint { margin: 0; color: var(--muted); font-size: 13px; }
+
+.tpls { display: grid; gap: 8px; }
+.tpl { display: grid; grid-template-columns: 18px 1fr; gap: 2px 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; }
+.tpl:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.tpl input { margin: 3px 0 0; accent-color: var(--accent); }
+.tpl strong { font-size: 15px; }
+.tpl span { grid-column: 2; font-size: 13px; color: var(--muted); }
+.tpl em { grid-column: 2; font-style: normal; font-size: 12px; color: var(--ok); font-weight: 600; }
+
+.swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.sw { display: grid; justify-items: center; gap: 4px; padding: 8px 4px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; text-align: center; }
+.sw:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.sw input { position: absolute; opacity: 0; pointer-events: none; }
+.dot { width: 34px; height: 34px; border-radius: 50%; display: grid; overflow: hidden; grid-template-rows: 2fr 1fr; border: 1px solid rgba(0,0,0,.08); }
+.sw b { font-size: 13px; }
+.sw small { font-size: 11px; color: var(--muted); line-height: 1.25; }
+
+.fonts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.fo { display: grid; justify-items: center; gap: 2px; padding: 8px 4px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; text-align: center; }
+.fo:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.fo input { position: absolute; opacity: 0; pointer-events: none; }
+.fo .aa { font-size: 30px; line-height: 1.1; }
+.fo b { font-size: 13px; }
+.fo small { font-size: 11px; color: var(--muted); line-height: 1.25; }
+.sw:has(input:focus-visible), .fo:has(input:focus-visible), .tpl:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.actions { display: grid; gap: 8px; }
+.btn { border: 0; border-radius: 10px; padding: 12px 14px; font-weight: 700; cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.secondary { background: var(--surface); border: 1px solid var(--line); }
+.btn:disabled { opacity: .5; cursor: default; }
+.status { margin: 0; min-height: 1.5em; font-size: 13px; color: var(--muted); }
+.code { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: var(--accent-soft); padding: 2px 6px; border-radius: 6px; overflow-wrap: anywhere; }
+
+.empty { padding: 32px; text-align: center; color: var(--muted); background: var(--surface); border-radius: 12px; }
+
+@media (max-width: 900px) {
+  .stage { grid-template-columns: minmax(0, 1fr); }
+  .panel { position: static; }
+}
+@media (prefers-reduced-motion: reduce) { .cv { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Elige tu CV</h1>
+      <p class="sub">Toca una plantilla, un color y una letra: la hoja cambia al tiro. Todos los diseños pasan el chequeo para sistemas de selección (ATS).</p>
+    </div>
+    <label class="who" id="who-wrap" hidden>Persona <select id="who"></select></label>
+  </header>
+
+  <div class="seg" id="versions" role="group" aria-label="Versión del CV"></div>
+
+  <section class="stage" id="stage">
+    <div class="sheet" id="sheet">
+      <span class="badge" id="badge" hidden></span>
+      <div class="cv" id="cv" role="img" aria-label=""></div>
+    </div>
+
+    <div class="panel">
+      <fieldset>
+        <legend>1. Plantilla</legend>
+        <div class="tpls" id="tpls"></div>
+      </fieldset>
+      <fieldset>
+        <legend>2. Color</legend>
+        <div class="swatches" id="pals"></div>
+      </fieldset>
+      <fieldset>
+        <legend>3. Letra</legend>
+        <div class="fonts" id="fonts"></div>
+      </fieldset>
+      <div class="actions">
+        <button class="btn primary" id="choose" type="button">Elegir este diseño</button>
+        <button class="btn secondary" id="download" type="button" hidden>Descargar PDF</button>
+        <p class="status" id="status" role="status"></p>
+        <p class="hint">Código del diseño: <span class="code" id="code"></span></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+// Para qué sirve cada color y cada letra (la explicación vive aquí; los datos, en manifest.json).
+const MOOD = {
+  marino: "Confianza. Banca, retail, consultoría.", petroleo: "Técnico y tranquilo.", bosque: "Operaciones, sustentabilidad.",
+  burdeos: "Elegante. Legal, comercial.", grafito: "Neutro: va con todo.", indigo: "Tecnología, creatividad."
+};
+const FONT_INFO = {
+  condensada: { label: "Condensada", note: "Títulos con fuerza", family: "Muestra Condensada" },
+  grotesca: { label: "Moderna", note: "Limpia y actual", family: "Muestra Grotesca" },
+  serifa: { label: "Clásica", note: "Formal, con serifa", family: "Muestra Serifa" }
+};
+
+const $ = id => document.getElementById(id);
+const state = { personas: [], persona: null, manifest: null, version: null, pl: null, pa: null, fu: null };
+let db = null, downloads = null, unsub = null, saved = {};
+const sprites = {}, bundles = {};   // grillas ya cargadas y paquetes de PDF ya bajados, por versión
+
+function store(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {} }
+function load(key) { try { return JSON.parse(localStorage.getItem(key) || "null"); } catch (e) { return null; } }
+
+function combo() { return `${state.pl}-${state.pa}-${state.fu}`; }
+function base() { return `p/${state.persona}`; }
+function versionEntry() { return state.manifest.versiones.find(v => v.id === state.version); }
+
+function radio(name, value, checked) {
+  const i = Object.assign(document.createElement("input"), { type: "radio", name, value, checked });
+  i.addEventListener("change", () => { state[name] = value; update(); });
+  return i;
+}
+
+function buildControls() {
+  const m = state.manifest;
+  $("tpls").replaceChildren(...Object.entries(m.plantillas).map(([id, t]) => {
+    const l = document.createElement("label"); l.className = "tpl";
+    l.append(radio("pl", id, id === state.pl),
+      Object.assign(document.createElement("strong"), { textContent: t.nombre }),
+      Object.assign(document.createElement("span"), { textContent: t.para }),
+      Object.assign(document.createElement("em"), { textContent: t.ats }));
+    return l;
+  }));
+  $("pals").replaceChildren(...Object.entries(m.paletas).map(([id, p]) => {
+    const l = document.createElement("label"); l.className = "sw";
+    const dot = document.createElement("span"); dot.className = "dot";
+    dot.append(Object.assign(document.createElement("span"), { style: `background:${p.primary}` }),
+               Object.assign(document.createElement("span"), { style: `background:${p.soft}` }));
+    l.append(radio("pa", id, id === state.pa), dot,
+      Object.assign(document.createElement("b"), { textContent: p.nombre }),
+      Object.assign(document.createElement("small"), { textContent: MOOD[id] || "" }));
+    return l;
+  }));
+  $("fonts").replaceChildren(...Object.keys(m.fuentes).map(id => {
+    const info = FONT_INFO[id] || { label: id, note: "", family: "inherit" };
+    const l = document.createElement("label"); l.className = "fo";
+    l.append(radio("fu", id, id === state.fu),
+      Object.assign(document.createElement("span"), { className: "aa", textContent: "Aa", style: `font-family:"${info.family}"` }),
+      Object.assign(document.createElement("b"), { textContent: info.label }),
+      Object.assign(document.createElement("small"), { textContent: info.note }));
+    return l;
+  }));
+  $("versions").replaceChildren(...m.versiones.map(v => {
+    const b = Object.assign(document.createElement("button"), { type: "button", textContent: v.titulo || v.id });
+    b.setAttribute("aria-pressed", v.id === state.version);
+    b.addEventListener("click", () => { state.version = v.id; pickStart(); buildControls(); update(); });
+    return b;
+  }));
+}
+
+function pickStart() {
+  // Parte del diseño elegido antes (guardado), si no del que tiene hoy la versión.
+  const v = versionEntry(), choice = saved[`${state.persona}--${state.version}`];
+  const a = choice || { plantilla: v.actual.plantilla, paleta: v.actual.paleta, fuentes: v.actual.fuentes };
+  const m = state.manifest;
+  state.pl = m.plantillas[a.plantilla] ? a.plantilla : Object.keys(m.plantillas)[0];
+  state.pa = m.paletas[a.paleta] ? a.paleta : "marino";
+  state.fu = m.fuentes[a.fuentes] ? a.fuentes : "condensada";
+}
+
+function update() {
+  const c = combo(), v = versionEntry();
+  if (!v.combos[c]) { $("status").textContent = "Esta combinación no se generó."; return; }
+  // La vista previa es una celda de la grilla de la versión (todas las combinaciones en una imagen).
+  const cv = $("cv"), sheet = $("sheet"), sp = v.sprite, cell = v.combos[c].celda;
+  const url = `${base()}/${sp.archivo}`;
+  cv.style.backgroundImage = `url("${url}")`;
+  cv.style.backgroundSize = `${sp.cols * 100}% ${sp.filas * 100}%`;
+  cv.style.backgroundPosition = `${(cell % sp.cols) * 100 / (sp.cols - 1)}% ${Math.floor(cell / sp.cols) * 100 / Math.max(sp.filas - 1, 1)}%`;
+  cv.setAttribute("aria-label", `CV de ${state.manifest.persona.nombre}, versión ${v.titulo}, diseño ${c}`);
+  if (!sprites[url]) {
+    sheet.classList.add("loading");
+    sprites[url] = new Promise(ok => { const i = new Image(); i.onload = i.onerror = ok; i.src = url; });
+  }
+  sprites[url].then(() => sheet.classList.remove("loading"));
+  $("code").textContent = `${state.persona} · ${state.version} · ${c}`;
+  const choice = saved[`${state.persona}--${state.version}`];
+  const badge = $("badge");
+  const isChosen = choice && `${choice.plantilla}-${choice.paleta}-${choice.fuentes}` === c;
+  badge.hidden = !isChosen; badge.className = "badge ok"; badge.textContent = "✓ Diseño elegido";
+  $("status").textContent = "";
+  for (const b of $("versions").children) b.setAttribute("aria-pressed", b.textContent === (v.titulo || v.id));
+  store("elige:last", { persona: state.persona, version: state.version, pl: state.pl, pa: state.pa, fu: state.fu });
+}
+
+async function choose() {
+  const doc = { persona: state.persona, version: state.version, plantilla: state.pl, paleta: state.pa, fuentes: state.fu,
+                fecha: new Date().toISOString() };
+  if (!db) {
+    $("status").textContent = "No se pudo guardar desde aquí. Copia el código de abajo y envíaselo a quien te armó el CV.";
+    return;
+  }
+  $("choose").disabled = true;
+  try {
+    await db.doc(`elecciones/${state.persona}--${state.version}`).set(doc);
+    $("status").textContent = "Guardado. Claude lo aplica a tu CV la próxima vez que se lo pidas.";
+  } catch (e) {
+    $("status").textContent = "No se pudo guardar (" + (e && e.code || "error") + "). Copia el código de abajo y envíalo.";
+  } finally { $("choose").disabled = false; }
+}
+
+async function download() {
+  if (!downloads) return;
+  const c = combo();
+  $("download").disabled = true; $("status").textContent = "Preparando el PDF…";
+  try {
+    const v = versionEntry(), [start, len] = v.combos[c].pdf, url = `${base()}/${v.pdfs}`;
+    let data;
+    if (bundles[url]) data = (await bundles[url]).slice(start, start + len);
+    else {
+      // Pide solo el pedazo de este PDF; si el servidor no acepta rangos, baja el paquete una vez y lo corta aquí.
+      const r = await fetch(url, { headers: { Range: `bytes=${start}-${start + len - 1}` } });
+      if (r.status === 206) data = await r.arrayBuffer();
+      else if (r.ok) { bundles[url] = r.arrayBuffer(); data = (await bundles[url]).slice(start, start + len); }
+      else throw { code: "missing" };
+    }
+    if (data.byteLength !== len) throw { code: "missing" };
+    // El perfil primero: LinkedIn corta el nombre del archivo y así se ve cuál CV es.
+    const name = `${v.titulo} - ${state.manifest.persona.nombre}.pdf`;
+    await downloads.save({ filename: name, data: new Blob([data], { type: "application/pdf" }) });
+    $("status").textContent = "PDF descargado.";
+  } catch (e) {
+    const code = e && e.code;
+    $("status").textContent = code === "declined" ? "Descarga cancelada." : "No se pudo descargar el PDF.";
+  } finally { $("download").disabled = false; }
+}
+
+function listen() {
+  if (!db) return;
+  if (unsub) unsub();
+  unsub = db.collection("elecciones").where("persona", "==", state.persona).onSnapshot(snap => {
+    saved = {};
+    snap.docs.forEach(d => { const x = d.data(); if (x) saved[`${x.persona}--${x.version}`] = x; });
+    update();
+  }, () => {});
+}
+
+async function openPersona(id) {
+  state.persona = id;
+  const r = await fetch(`p/${id}/manifest.json`);
+  state.manifest = await r.json();
+  const last = load("elige:last");
+  state.version = (last && last.persona === id && state.manifest.versiones.some(v => v.id === last.version))
+    ? last.version : state.manifest.versiones[0].id;
+  pickStart();
+  if (last && last.persona === id && last.version === state.version) Object.assign(state, { pl: last.pl, pa: last.pa, fu: last.fu });
+  buildControls(); update(); listen();
+}
+
+async function start() {
+  const personas = await (await fetch("personas.json")).json();
+  state.personas = personas;
+  if (personas.length > 1) {
+    $("who-wrap").hidden = false;
+    $("who").replaceChildren(...personas.map(p => Object.assign(document.createElement("option"), { value: p.id, textContent: p.nombre })));
+    $("who").addEventListener("change", e => openPersona(e.target.value));
+  }
+  const last = load("elige:last");
+  const first = (last && personas.some(p => p.id === last.persona)) ? last.persona : personas[0].id;
+  $("who").value = first;
+  await openPersona(first);
+}
+
+$("choose").addEventListener("click", choose);
+$("download").addEventListener("click", download);
+start().catch(() => { $("stage").replaceChildren(Object.assign(document.createElement("p"), { className: "empty", textContent: "No se pudieron cargar los CVs. Recarga la página." })); });
+
+// Funciones de la plataforma: se encienden cuando están disponibles; sin ellas la página sigue sirviendo.
+(async () => {
+  if (!window.claude?.use) return;
+  claude.use("downloads").then(d => { downloads = d; $("download").hidden = !d; });
+  claude.use("db").then(d => { db = d; if (d && state.persona) listen(); });
+})();
+</script>

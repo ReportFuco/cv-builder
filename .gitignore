@@ -1,0 +1,42 @@
+# Repo PÚBLICO. Lista blanca: se ignora TODO y solo se publica lo nombrado con «!».
+# Así, un archivo personal nuevo (otro perfil, notas, un PDF) queda fuera sin tener que acordarse.
+# Antes de cada commit corre el chequeo: python cv-builder/scripts/chequeo_publico.py (instalado como pre-commit).
+
+/*
+!/.gitignore
+!/README.md
+!/LICENSE
+!/CONVENCIONES.md
+!/assets/
+!/cv-builder/
+!/perfiles/
+
+# perfiles/: solo la persona ficticia de ejemplo. Los perfiles reales (datos personales) nunca se suben.
+/perfiles/*
+!/perfiles/ejemplo/
+
+# Dentro de lo publicado, igual fuera:
+cv-builder/references/capturas/
+**/salida/
+**/muestrario/
+**/muestras/
+**/fuentes/
+**/historial.jsonl
+**/elecciones.json
+**/.servir/
+
+# Python y herramientas
+__pycache__/
+*.py[cod]
+.venv/
+env/
+.pytest_cache/
+.playwright-mcp/
+*.log
+
+# Secretos (por si acaso)
+.env
+.env.*
+!.env.example
+*.pem
+*.key

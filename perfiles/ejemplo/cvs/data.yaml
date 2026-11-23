@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=../../../cv-builder/schema/version.schema.json
+# Versión «data» de la persona ficticia de ejemplo.
+objetivo: data
+idioma: es
+pais: CL
+plantilla: ola
+foto: false
+breve: true
+paginas_max: 1
+
+label: Analista de Datos | SQL, Python, Power BI
+summary: >-
+  Analista de datos con 4 años convirtiendo reportes manuales en tableros y procesos automáticos: en mi cargo actual
+  bajé la preparación de reportes semanales de 6 h a 25 min.
+
+secciones: [work, projects]
+secciones_lateral: [skills, education, certificates, languages]
+
+work:
+  - { id: distribuidora-bi, max: 3 }
+  - { id: financiera-operaciones, max: 1 }
+  - { id: universidad-ayudantia, compact: true }
+
+projects:
+  - Tablero de precios del retail
+skills: [Datos, Programación]
+max_certificates: 2

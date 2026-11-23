@@ -1,0 +1,7 @@
+# Dependencias de los scripts de cv-builder (Python 3.11+).
+# Instalar: pip install -r requirements.txt && playwright install chromium
+pyyaml>=6
+jinja2>=3.1
+pymupdf>=1.24      # se importa como `pymupdf` (antes `fitz`)
+playwright>=1.45
+jsonschema>=4.18   # trae `referencing`, que usa validar.py

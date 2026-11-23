@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<title>Banner {{ estilo }}</title>
+<style>{{ css | safe }}</style>
+</head>
+{#- Banner de LinkedIn 1584 × 396. El texto vive a la derecha: abajo a la izquierda va la foto de perfil. -#}
+<body class="e-{{ estilo }}">
+<div class="canvas">
+  <div class="deco" aria-hidden="true">
+    {% if estilo == 'ruta' %}<div class="orb"></div><div class="orb small"></div>{% endif %}
+  </div>
+
+  <div class="content">
+    {% if estilo == 'frase' %}
+      <p class="eyebrow">{{ titulo }}</p>
+      <p class="frase">{{ frase }}</p>
+      {% if herramientas %}<p class="tools">{{ herramientas | join(' · ') }}</p>{% endif %}
+    {% else %}
+      <h1>{{ titulo }}</h1>
+      {% if herramientas %}<p class="tools">{{ herramientas | join(' · ') }}</p>{% endif %}
+
+      {% if estilo == 'cifras' and cifras %}
+      <ul class="stats">
+        {% for c in cifras %}<li><span class="val">{{ c.valor }}</span><span class="cap">{{ c.texto }}</span></li>{% endfor %}
+      </ul>
+      {% elif estilo == 'cifras' %}
+      <p class="frase small">{{ frase }}</p>
+      {% endif %}
+
+      {% if estilo == 'ruta' and ruta %}
+      <ol class="route">
+        {% for r in ruta %}<li class="{{ 'now' if r.actual }}"><span class="dot"></span><span class="name">{{ r.nombre }}</span><span class="year">{{ r.anio }}</span></li>{% endfor %}
+      </ol>
+      {% endif %}
+    {% endif %}
+    {% if url %}<p class="url">{{ url }}</p>{% endif %}
+  </div>
+
+  {#- Capa de control (solo en la imagen «-zonas»): lo que tapa LinkedIn. -#}
+  <div class="zones" aria-hidden="true">
+    <div class="photo"><span>foto de perfil (escritorio, aprox.)</span></div>
+    <div class="edge left"></div><div class="edge right"></div>
+  </div>
+</div>
+</body>
+</html>

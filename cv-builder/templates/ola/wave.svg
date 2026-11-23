@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 62" preserveAspectRatio="none">
+  <!-- Colores del tema: render.py reemplaza {primary}, {secondary}, {soft} y {paper}. -->
+  <rect width="210" height="62" fill="{primary}"/>
+  <path fill="{secondary}" d="M0 34 C46 24 104 30 150 44 C176 52 196 56 210 56 L210 62 L0 62 Z"/>
+  <path fill="{paper}" d="M0 44 C50 34 106 40 152 52 C178 58 198 61 210 60 L210 62 L0 62 Z"/>
+  <path fill="none" stroke="{soft}" stroke-width="0.6" opacity="0.8" d="M0 29 C52 17 112 25 158 40 C182 47 199 50 210 50"/>
+</svg>

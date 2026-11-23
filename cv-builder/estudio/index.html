@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estudio de CV</title>
+<style>
+  :root {
+    --bg: #F4F2EE; --panel: #FFFFFF; --ink: #1E2126; --muted: #6B7078; --line: #E2DED7;
+    --accent: #1F4D3A; --accent-ink: #FFFFFF; --ok: #2F7A4F; --warn: #A86B00; --err: #B3261E;
+    --r: 10px; --f: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { font: 14px/1.45 var(--f); color: var(--ink); background: var(--bg); display: grid;
+         grid-template: "top top top" auto "ctl prev chk" 1fr / 280px 1fr 340px; }
+
+  header { grid-area: top; display: flex; align-items: baseline; gap: 12px; padding: 14px 20px;
+           border-bottom: 1px solid var(--line); background: var(--panel); }
+  header h1 { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; }
+  header .file { color: var(--muted); font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  header .status { margin-left: auto; font-size: 12.5px; color: var(--muted); }
+  header .status.busy::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 7px;
+           border-radius: 50%; background: var(--warn); animation: pulse 0.9s infinite alternate; }
+  @keyframes pulse { to { opacity: 0.25; } }
+
+  aside { overflow-y: auto; padding: 18px; background: var(--panel); }
+  #ctl { grid-area: ctl; border-right: 1px solid var(--line); }
+  #chk { grid-area: chk; border-left: 1px solid var(--line); }
+  h2 { font-size: 11.5px; font-weight: 650; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+       margin: 20px 0 8px; }
+  h2:first-child { margin-top: 0; }
+
+  .seg { display: flex; flex-wrap: wrap; gap: 6px; }
+  .seg button, .list button { font: inherit; cursor: pointer; border: 1px solid var(--line); background: var(--panel);
+       color: var(--ink); border-radius: 8px; padding: 6px 11px; transition: border-color .15s, background .15s; }
+  .seg button:hover, .list button:hover { border-color: var(--muted); }
+  .seg button[aria-pressed="true"], .list button[aria-pressed="true"] { border-color: var(--accent);
+       background: color-mix(in srgb, var(--accent) 8%, white); box-shadow: inset 0 0 0 1px var(--accent); }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .list { display: grid; gap: 6px; }
+  .list button { display: flex; align-items: center; gap: 10px; text-align: left; width: 100%; }
+  .sw { display: inline-flex; flex: none; border-radius: 5px; overflow: hidden; border: 1px solid rgba(0,0,0,.08); }
+  .sw i { width: 12px; height: 20px; }
+  .small { color: var(--muted); font-size: 12px; }
+
+  .range { display: flex; align-items: center; gap: 10px; }
+  .range input { flex: 1; accent-color: var(--accent); }
+  .range output { font-variant-numeric: tabular-nums; width: 3.2em; text-align: right; }
+
+  .toggle { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; cursor: pointer; }
+  .toggle input { width: 34px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+
+  .save { margin-top: 24px; display: grid; gap: 8px; }
+  .btn { font: inherit; font-weight: 600; cursor: pointer; border: 0; border-radius: var(--r); padding: 10px 14px;
+         background: var(--accent); color: var(--accent-ink); }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); font-weight: 500; }
+  .btn:disabled { opacity: .5; cursor: progress; }
+  .dirty { color: var(--warn); font-size: 12.5px; min-height: 1.2em; }
+
+  main { grid-area: prev; overflow: auto; display: flex; justify-content: center; padding: 24px; }
+  .sheet { position: relative; flex: none; transform-origin: top center; }
+  .sheet iframe { display: block; width: 794px; height: 1123px; border: 0; background: white;
+                  box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 28px rgba(0,0,0,.10); }
+  .fold { position: absolute; left: -14px; right: -14px; top: 1123px; border-top: 2px dashed var(--err);
+          pointer-events: none; display: none; }
+  .fold span { position: absolute; right: 0; top: 2px; font-size: 11px; color: var(--err); background: var(--bg);
+               padding: 0 4px; }
+
+  .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
+  .kpi { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+  .kpi b { display: block; font-size: 18px; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .kpi span { font-size: 11.5px; color: var(--muted); }
+  ul.check { list-style: none; display: grid; gap: 6px; }
+  ul.check li { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; font-size: 13px; }
+  .tag { font-size: 10.5px; font-weight: 700; letter-spacing: .04em; border-radius: 4px; padding: 1px 6px; margin-top: 1px; }
+  .tag.OK { background: #E6F2EA; color: var(--ok); }
+  .tag.AVISO { background: #FBF0DC; color: var(--warn); }
+  .tag.ERROR { background: #F8E1DF; color: var(--err); }
+  .empty { color: var(--muted); font-size: 13px; }
+  .err { color: var(--err); white-space: pre-wrap; font-size: 12.5px; }
+  a { color: var(--accent); }
+  .hist { font-size: 12.5px; border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+  .hist img { width: 100%; margin-top: 8px; border: 1px solid var(--line); border-radius: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Estudio de CV</h1>
+  <span class="file" id="file">…</span>
+  <span class="status" id="status">Cargando…</span>
+</header>
+
+<aside id="ctl" aria-label="Diseño">
+  <h2>Plantilla</h2>
+  <div class="seg" id="plantilla"></div>
+
+  <h2>Paleta</h2>
+  <div class="list" id="paleta"></div>
+
+  <h2>Fuentes</h2>
+  <div class="list" id="fuentes"></div>
+
+  <h2>Escala</h2>
+  <div class="range">
+    <input type="range" id="escala" min="0.9" max="1.1" step="0.01" aria-label="Escala de la tipografía">
+    <output id="escala-out">100 %</output>
+  </div>
+
+  <h2>Contenido</h2>
+  <label class="toggle">Foto <input type="checkbox" id="foto"></label>
+  <label class="toggle">Logros breves <input type="checkbox" id="breve"></label>
+
+  <div class="save">
+    <div class="dirty" id="dirty"></div>
+    <button class="btn" id="guardar">Guardar en la versión</button>
+    <button class="btn ghost" id="deshacer">Volver a lo guardado</button>
+    <p class="small">Guardar escribe solo plantilla, tema, foto y breve en el YAML, genera el PDF y deja el cambio en
+      <code>historial.jsonl</code>.</p>
+  </div>
+</aside>
+
+<main id="prev">
+  <div class="sheet" id="sheet">
+    <iframe id="frame" title="Vista previa del CV"></iframe>
+    <div class="fold" id="fold"><span>fin de la página 1</span></div>
+  </div>
+</main>
+
+<aside id="chk" aria-label="Chequeo">
+  <h2>Chequeo ATS</h2>
+  <div id="check"><p class="empty">Se calcula al dejar de mover los controles.</p></div>
+  <h2>Último guardado</h2>
+  <div id="hist"><p class="empty">Nada guardado en esta sesión.</p></div>
+</aside>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let D = null, state = null, saved = null, seq = 0, tPrev = null, tChk = null;
+
+const status = (txt, busy = false) => { $("status").textContent = txt; $("status").classList.toggle("busy", busy); };
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+async function api(path, body) {
+  const r = await fetch(path, body === undefined ? {} : { method: "POST", headers: { "Content-Type": "application/json" },
+                                                          body: JSON.stringify(body) });
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+
+function button(label, pressed, onclick, extra = "") {
+  const b = document.createElement("button");
+  b.type = "button"; b.innerHTML = extra + `<span>${esc(label)}</span>`;
+  b.setAttribute("aria-pressed", pressed); b.onclick = onclick;
+  return b;
+}
+
+function draw() {
+  const L = D.listado;
+  $("plantilla").replaceChildren(...L.plantillas.map((p) => button(p, state.plantilla === p, () => {
+    // al cambiar de plantilla, el tema vuelve al por defecto de esa plantilla (conserva la escala)
+    state.plantilla = p; state.tema = { ...state.tema, ...(L.por_defecto[p] || {}) }; changed();
+  })));
+  $("paleta").replaceChildren(...Object.entries(L.paletas).map(([k, name]) => button(name, state.tema.paleta === k,
+    () => { state.tema.paleta = k; changed(); },
+    `<span class="sw">${(D.colores[k] || []).map((c) => `<i style="background:${c}"></i>`).join("")}</span>`)));
+  $("fuentes").replaceChildren(...Object.entries(L.fuentes).map(([k, name]) => button(name, state.tema.fuentes === k,
+    () => { state.tema.fuentes = k; changed(); })));
+  $("escala").value = state.tema.escala ?? 1;
+  $("escala-out").value = Math.round((state.tema.escala ?? 1) * 100) + " %";
+  $("foto").checked = state.foto; $("breve").checked = state.breve;
+  $("dirty").textContent = same(state, saved) ? "" : "Cambios sin guardar";
+}
+
+function changed() {
+  draw();
+  clearTimeout(tPrev); clearTimeout(tChk);
+  tPrev = setTimeout(preview, 120);
+}
+
+async function preview() {
+  const my = ++seq;
+  status("Generando vista previa…", true);
+  try {
+    const r = await api("/api/preview", state);
+    if (my !== seq) return;                       // llegó una respuesta vieja
+    $("frame").src = r.html;
+    status("Vista previa al día");
+    tChk = setTimeout(chequeo, 1100);
+  } catch (e) { if (my === seq) showError(e); }
+}
+
+async function chequeo() {
+  const my = seq;
+  status("Revisando PDF y ATS…", true);
+  try {
+    const r = await api("/api/chequeo", state);
+    if (my !== seq) return;
+    renderCheck(r);
+    status("Listo");
+  } catch (e) { if (my === seq) showError(e); }
+}
+
+function renderCheck(r) {
+  const items = r.chequeo || [];
+  const pages = (items.find((i) => i.texto.startsWith("páginas")) || {}).texto || "";
+  const n = (lvl) => items.filter((i) => i.nivel === lvl).length;
+  $("check").innerHTML = `
+    <div class="summary">
+      <div class="kpi"><b>${esc(pages.match(/\d+/)?.[0] ?? "–")}</b><span>página(s)</span></div>
+      <div class="kpi"><b>${Math.round((r.escala_ajuste ?? 1) * 100)} %</b><span>ajuste automático</span></div>
+      <div class="kpi"><b style="color:var(--err)">${n("ERROR")}</b><span>errores</span></div>
+      <div class="kpi"><b style="color:var(--warn)">${n("AVISO")}</b><span>avisos</span></div>
+    </div>
+    <ul class="check">${items.map((i) => `<li><span class="tag ${esc(i.nivel)}">${esc(i.nivel)}</span><span>${esc(i.texto)}</span></li>`).join("")}</ul>
+    ${r.png ? `<p class="small" style="margin-top:10px"><a href="${r.png}" target="_blank">Ver PNG del PDF</a></p>` : ""}`;
+}
+
+function showError(e) {
+  status("Error");
+  $("check").innerHTML = `<p class="err">${esc(e.message)}</p>`;
+}
+
+function fitSheet() {
+  const f = $("frame"), doc = f.contentDocument;
+  if (!doc || !doc.body) return;
+  const h = Math.max(1123, doc.documentElement.scrollHeight);
+  f.style.height = h + "px";
+  $("fold").style.display = h > 1125 ? "block" : "none";
+  const avail = $("prev").clientWidth - 48;
+  const k = Math.min(1, avail / 794);
+  $("sheet").style.transform = `scale(${k})`;
+  $("sheet").style.marginBottom = `${(k - 1) * h}px`;
+}
+
+$("frame").addEventListener("load", fitSheet);
+window.addEventListener("resize", fitSheet);
+$("escala").addEventListener("input", (e) => { state.tema.escala = +(+e.target.value).toFixed(2); changed(); });
+$("foto").addEventListener("change", (e) => { state.foto = e.target.checked; changed(); });
+$("breve").addEventListener("change", (e) => { state.breve = e.target.checked; changed(); });
+$("deshacer").addEventListener("click", () => { state = structuredClone(saved); changed(); });
+$("guardar").addEventListener("click", async () => {
+  const b = $("guardar"); b.disabled = true; clearTimeout(tChk); seq++;
+  status("Guardando y generando el PDF…", true);
+  try {
+    const r = await api("/api/guardar", state);
+    saved = structuredClone(state);
+    renderCheck(r);
+    const h = r.historial;
+    $("hist").innerHTML = `<div class="hist"><b>${esc(h.fecha.replace("T", " "))}</b> · ${esc(h.version)}<br>
+      <span class="small">${esc(JSON.stringify(h.despues))}</span><img src="${r.png}" alt="CV guardado"></div>`;
+    status("Guardado");
+    draw();
+  } catch (e) { showError(e); }
+  b.disabled = false;
+});
+
+(async () => {
+  try {
+    D = await api("/api/estado");
+    $("file").textContent = D.version;
+    state = structuredClone(D.estado); saved = structuredClone(D.estado);
+    changed();
+  } catch (e) { showError(e); }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="{{ t.lang }}">
+<head>
+<meta charset="utf-8">
+<title>{{ b.name }} | CV</title>
+<style>{{ css | safe }}</style>
+</head>
+{#- Plantilla «clasica»: máximo ATS, inspirada en Jake's Resume. Una columna, sin color de fondo, sin íconos.
+    Las secciones de la columna lateral (secciones_lateral) se apilan al final de la única columna, en su orden. -#}
+<body class="{{ 'borrador' if draft else '' }}">
+<main class="page">
+
+  <header class="head{{ ' with-photo' if photo }}">
+    <div class="id">
+      <h1>{{ b.name }}</h1>
+      {% if label %}<p class="label">{{ label | replace('|', '·') }}</p>{% endif %}
+      <p class="contact">
+        {%- set sep = joiner('<span class="sep"> | </span>' | safe) -%}
+        {%- if location %}{{ sep() }}<span>{{ location }}</span>{% endif -%}
+        {%- if b.phone %}{{ sep() }}<a href="tel:{{ b.phone | replace(' ', '') }}">{{ b.phone }}</a>{% endif -%}
+        {%- if b.email %}{{ sep() }}<a href="mailto:{{ b.email }}">{{ b.email }}</a>{% endif -%}
+        {%- for p in b.profiles or [] %}{{ sep() }}<a href="{{ p.url }}">{{ p.url | short }}</a>{% endfor -%}
+      </p>
+    </div>
+    {% if photo %}<img class="photo" src="{{ photo }}" alt="">{% endif %}
+  </header>
+
+  {% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
+
+  {% for s in sections %}
+  {% if s == 'work' and work %}
+  <section class="work">
+    <h2>{{ t.work }}</h2>
+    {% for w in work %}
+    {% if w.compact %}
+    <div class="entry compact">
+      <div class="row"><p><strong>{{ w.position }}</strong>, {{ w.name }}</p><span class="date">{{ w.dates }}</span></div>
+    </div>
+    {% else %}
+    <div class="entry">
+      <div class="row"><h3>{{ w.position }}</h3><span class="date">{{ w.dates }}</span></div>
+      <div class="row sub"><p>{{ w.name }}</p>{% if w.location %}<span class="where">{{ w.location }}</span>{% endif %}</div>
+      {% if w.summary %}<p class="context">{{ w.summary }}</p>{% endif %}
+      {% if w.highlights %}
+      <ul class="hl">
+        {% for h in w.highlights %}<li>{{ h.text }}{% if draft and not h.metric %} <mark>falta cifra</mark>{% endif %}</li>{% endfor %}
+      </ul>
+      {% elif draft %}<p><mark>faltan logros</mark></p>{% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+  </section>
+
+  {% elif s == 'projects' and projects %}
+  <section class="projects">
+    <h2>{{ t.projects }}</h2>
+    {% for p in projects %}
+    <div class="entry">
+      <div class="row">
+        <p><strong class="pname">{{ p.name }}</strong>{% if p.keywords %}<span class="sep"> | </span><em class="stack">{{ p.keywords | join(', ') }}</em>{% endif %}</p>
+        {% if p.link %}<a class="plink" href="{{ p.link }}">{{ p.link | short }}</a>{% endif %}
+      </div>
+      {% if p.bullets %}
+      <ul class="hl">{% for h in p.bullets %}<li>{{ h.text }}</li>{% endfor %}</ul>
+      {% else %}
+      <p class="desc">{{ p.description }}{% if p.result and (p.description | replace('\u00a0', ' ')) != p.short %}{# en modo breve, short ya trae la cifra del result #} {{ p.result }}{% elif draft %} <mark>falta resultado</mark>{% endif %}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </section>
+
+  {% elif s == 'skills' and skills %}
+  <section class="skills">
+    <h2>{{ t.skills }}</h2>
+    <ul class="plain">
+      {% for g in skills %}<li><strong>{{ g.name }}:</strong> {{ g.keywords | join(', ') }}</li>{% endfor %}
+    </ul>
+  </section>
+
+  {% elif s == 'education' and education %}
+  <section class="education">
+    <h2>{{ t.education }}</h2>
+    {% for e in education %}
+    <div class="entry tight">
+      <div class="row"><p><strong>{{ e.title }}</strong>, <em>{{ e.institution }}</em></p><span class="date">{{ e.dates }}</span></div>
+    </div>
+    {% endfor %}
+  </section>
+
+  {% elif s == 'certificates' and certificates %}
+  <section class="certificates">
+    <h2>{{ t.certificates }}</h2>
+    <ul class="plain">
+      {% for c in certificates %}<li class="row"><p><strong>{% if c.url %}<a href="{{ c.url }}">{{ c.name }}</a>{% else %}{{ c.name }}{% endif %}</strong>{% if c.issuer %}, {{ c.issuer }}{% endif %}</p><span class="date">{{ c.date }}</span></li>{% endfor %}
+    </ul>
+  </section>
+
+  {% elif s == 'languages' and languages %}
+  <section class="languages">
+    <h2>{{ t.languages }}</h2>
+    <p>{% for l in languages %}<strong>{{ l.language }}:</strong> {{ l.level }}{{ ' · ' if not loop.last }}{% endfor %}</p>
+  </section>
+  {% endif %}
+  {% endfor %}
+
+</main>
+</body>
+</html>

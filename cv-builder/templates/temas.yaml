@@ -1,0 +1,45 @@
+# Temas: paletas y pares de fuentes que cualquier plantilla puede usar.
+# Una versión elige con `tema: {paleta, fuentes, escala}`; lo que no elija sale de `por_defecto[<plantilla>]`.
+# render.py escribe al final del CSS un bloque :root con estas variables:
+#   --c-primary (encabezados, fondos fuertes), --c-secondary (acentos), --c-soft (detalles claros),
+#   --c-ink (texto), --c-muted (texto secundario), --c-rule (líneas), --c-paper (fondo), --c-panel (fondo de paneles),
+#   --f-head, --f-body, --head-transform, --head-tracking, --head-weight.
+# Los SVG propios de la plantilla (p. ej. wave.svg) pueden usar {primary}, {secondary}, {soft}, {panel}, {paper}.
+# Regla: contraste de --c-ink y --c-muted sobre --c-paper ≥ 4.5:1; --c-paper sobre --c-primary ≥ 4.5:1.
+
+paletas:
+  marino:   { nombre: Azul marino,  primary: "#163A56", secondary: "#2E5E84", soft: "#9CC0DC", ink: "#1D2B38", muted: "#556677", rule: "#CBD8E4", paper: "#FFFFFF", panel: "#FFFFFF" }
+  petroleo: { nombre: Petróleo,     primary: "#0E5A6B", secondary: "#2F7A8A", soft: "#A9D2DA", ink: "#1C2733", muted: "#566170", rule: "#D6DCE2", paper: "#FFFFFF", panel: "#F2F7F8" }
+  bosque:   { nombre: Verde bosque, primary: "#1F4D3A", secondary: "#3B7458", soft: "#A8CDB8", ink: "#1E2A24", muted: "#56665D", rule: "#D3DED7", paper: "#FFFFFF", panel: "#F2F7F4" }
+  burdeos:  { nombre: Burdeos,      primary: "#5A1E2C", secondary: "#8A3A4A", soft: "#E3B6BF", ink: "#2A1C20", muted: "#6B565B", rule: "#E5D5D8", paper: "#FFFFFF", panel: "#FBF5F6" }
+  grafito:  { nombre: Grafito,      primary: "#2B2F36", secondary: "#4F5763", soft: "#B9C0CA", ink: "#1F2328", muted: "#5E6672", rule: "#D9DDE2", paper: "#FFFFFF", panel: "#F4F5F7" }
+  indigo:   { nombre: Índigo,       primary: "#28306B", secondary: "#4A53A3", soft: "#B8BDEB", ink: "#1E2033", muted: "#5C5F75", rule: "#D8DAEC", paper: "#FFFFFF", panel: "#F5F5FC" }
+
+fuentes:
+  condensada:
+    nombre: Condensada (Barlow Condensed + Nunito Sans)
+    head: { familia: Barlow Condensed, archivos: [{ archivo: BarlowCondensed-SemiBold.ttf, peso: "600" }, { archivo: BarlowCondensed-Medium.ttf, peso: "500" }] }
+    body: { familia: Nunito Sans, archivos: [{ archivo: NunitoSans.ttf, peso: "200 1000" }, { archivo: NunitoSans-Italic.ttf, peso: "200 1000", estilo: italic }] }
+    head_transform: uppercase
+    head_tracking: 0.07em
+    head_weight: 600
+  grotesca:
+    nombre: Grotesca (Schibsted Grotesk + Public Sans)
+    head: { familia: Schibsted Grotesk, archivos: [{ archivo: SchibstedGrotesk.ttf, peso: "400 900" }] }
+    body: { familia: Public Sans, archivos: [{ archivo: PublicSans.ttf, peso: "100 900" }, { archivo: PublicSans-Italic.ttf, peso: "100 900", estilo: italic }] }
+    head_transform: none
+    head_tracking: -0.01em
+    head_weight: 700
+  serifa:
+    nombre: Con serifa (Source Serif 4 + Source Sans 3)
+    head: { familia: Source Serif 4, archivos: [{ archivo: SourceSerif4.ttf, peso: "200 900" }] }
+    body: { familia: Source Sans 3, archivos: [{ archivo: SourceSans3.ttf, peso: "200 900" }, { archivo: SourceSans3-Italic.ttf, peso: "200 900", estilo: italic }] }
+    head_transform: none
+    head_tracking: 0em
+    head_weight: 650
+
+por_defecto:
+  ruta:    { paleta: petroleo, fuentes: grotesca }
+  ola:     { paleta: marino,   fuentes: condensada }
+  lateral: { paleta: grafito,  fuentes: grotesca }
+  clasica: { paleta: grafito,  fuentes: serifa }
