@@ -34,6 +34,14 @@ hay. Con una persona que ya existe, solo se pregunta lo nuevo.
 - Si dos fuentes no coinciden, manda la más reciente y la duda va a `pending`. Recorrer `pending` con la persona.
 - Modelo completo y formatos: `schema/README.md`.
 
+### 2b. Entrevista (apenas haya material de contexto) — ver `references/entrevista.md`
+
+**Obligatorio.** En cuanto hay documentos de la persona (CV, LinkedIn, notas, GitHub), leerlos enteros, armar el
+borrador del perfil y **llenar a la persona de preguntas** antes de redactar versiones: cifras de cada logro,
+alcance, confidencialidad, liderazgo, idioma, educación. Con `AskUserQuestion`, opciones con rangos y «No sé», en
+varias rondas de hasta 4 preguntas; repreguntar cuando una respuesta abre algo nuevo. Rango → piso honesto
+(«más de 10»); «No sé» → `metric: null` y a `pending`. Se repite cada vez que llega material nuevo.
+
 ### 3. Versión
 
 - `python <skill>/scripts/nuevo_perfil.py <persona> --version <objetivo>` y completar `cvs/<objetivo>.yaml`.
@@ -47,7 +55,7 @@ python <skill>/scripts/validar.py perfiles/<persona>
 ```
 
 Corregir todo `ERROR`. Los `AVISO` (logros sin cifra, proyectos sin `result`) se convierten en preguntas para la
-persona, no se rellenan inventando.
+persona (otra ronda de entrevista, paso 2b), no se rellenan inventando.
 
 ### 5. Renderizar
 
@@ -105,7 +113,8 @@ persona, leer las últimas líneas del historial** y mirar el PNG antes de tocar
 | Archivo | Cuándo leerlo |
 |---|---|
 | `references/objetivos.md` | Siempre: preguntas de entrada y qué cambia por objetivo |
+| `references/entrevista.md` | Siempre que haya material de una persona: cómo preguntar y escribir las respuestas |
 | `schema/README.md` | Al escribir o editar `perfil.yaml` o una versión |
 | `references/referencias-web.md` | Dudas de buenas prácticas (ATS, largo, orden, redacción) |
-| `references/analisis-cvs-propios.md` | Ejemplo de diagnóstico de un CV existente |
+| `references/diagnostico-cv.md` | Persona con CV existente: qué conservar y qué corregir antes del perfil |
 | `references/plantillas.md` | Al crear o cambiar una plantilla en `templates/` (reglas ATS y de ajuste) |

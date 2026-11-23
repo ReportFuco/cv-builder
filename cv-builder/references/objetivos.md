@@ -37,6 +37,7 @@ quiere versiones paralelas). Cada objetivo define qué se destaca; los datos sal
 4. **¿Dónde postulas y en qué idioma?** País (foto, datos personales y formato de fechas) e idioma del CV.
 5. **¿Qué material tienes?** CV actual (PDF), captura o export de LinkedIn, usuario de GitHub (se pide permiso antes
    de leer la cuenta), foto.
-6. **Lo que falta.** Se recorre `pending[]`: métricas de cada logro, fechas que no cuadran, cargos con nombres distintos.
+6. **Lo que falta.** Con el material leído, entrevista en rondas (`entrevista.md`): métricas de cada logro, alcance,
+   confidencialidad, liderazgo, fechas que no cuadran, cargos con nombres distintos. Lo que quede abierto va a `pending[]`.
 
 Con un perfil que ya existe, las preguntas 1, 5 y 6 se saltan o se acortan: solo se pregunta lo nuevo.
