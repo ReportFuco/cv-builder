@@ -33,7 +33,8 @@ GENERIC = {
 # Palabras de nombres de empresa demasiado comunes para bloquearlas.
 COMMON = {"universidad", "grupo", "chile", "santiago", "servicios", "comercial", "empresa", "empresas", "cobranzas",
           "consultores", "ingeniería", "ingenieria", "tecnología", "tecnologia", "sociedad", "limitada", "compañía",
-          "nacional", "internacional", "pontificia", "católica", "catolica", "instituto", "portales"}
+          "nacional", "internacional", "pontificia", "católica", "catolica", "instituto", "portales",
+          "tesis", "memoria", "capstone", "proyecto", "práctica", "practica"}   # también nombres genéricos de proyecto
 # Correos que sí pueden aparecer (sin datos de nadie).
 ALLOWED_EMAILS = {"noreply@anthropic.com"}
 
@@ -72,7 +73,9 @@ def private_terms() -> dict[str, str]:
                 terms[str(w["id"]).lower()] = f"{who}: id de cargo"
         for pr in p.get("projects") or []:
             if pr.get("name"):
-                terms[str(pr["name"]).split("—")[0].strip().lower()] = f"{who}: proyecto"
+                name = str(pr["name"]).split("—")[0].strip().lower()
+                if name not in COMMON:                                  # «Tesis — …» no identifica a nadie
+                    terms[name] = f"{who}: proyecto"
             if pr.get("url"):
                 host = re.sub(r"^https?://(www\.)?", "", str(pr["url"])).split("/")[0].lower()
                 terms[host] = f"{who}: sitio de un proyecto"

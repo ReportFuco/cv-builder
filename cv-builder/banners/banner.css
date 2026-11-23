@@ -74,6 +74,27 @@ h1 {
 .e-frase .frase { font-size: 40px; line-height: 1.2; margin-top: 14px; max-width: 920px; color: var(--c-primary); }
 .e-frase .tools, .e-frase .url { color: var(--c-muted); }
 
+/* ---------- formas: barras redondeadas con degradé que suben como un gráfico, fondo blanco ---------- */
+.e-formas .canvas { background: var(--c-paper); color: var(--c-ink); }
+.e-formas .content { left: 720px; }
+.shape { position: absolute; width: 150px; }
+.e-formas .shape { --g1: var(--c-secondary); --g2: var(--c-soft); }
+.shape.q   { left: 0; top: 0; height: 150px; border-radius: 0 0 150px 0;
+             background: linear-gradient(135deg, var(--g2), color-mix(in srgb, var(--g1) 70%, var(--g2))); }
+.shape.b1  { left: 0;     top: 230px; height: 200px; border-radius: 75px 75px 0 0;
+             background: linear-gradient(160deg, var(--g2) 10%, var(--g1)); }
+.shape.b2  { left: 164px; top: 164px; height: 260px; border-radius: 75px 75px 0 0;
+             background: linear-gradient(200deg, var(--g2), var(--g1) 95%); }
+.shape.b3  { left: 328px; top: 98px;  height: 330px; border-radius: 75px 75px 0 0;
+             background: linear-gradient(170deg, color-mix(in srgb, var(--g1) 25%, var(--g2)), var(--g1)); }
+.shape.b4  { left: 492px; top: 196px; height: 230px; border-radius: 75px 75px 0 0;
+             background: linear-gradient(210deg, var(--g2) 20%, color-mix(in srgb, var(--g1) 80%, var(--g2))); }
+.shape.dot1 { left: 492px; top: 30px; height: 150px; border-radius: 50%;
+             background: linear-gradient(225deg, var(--g2), var(--g1)); }
+.e-formas .eyebrow { color: var(--c-primary); }
+.e-formas h1 { margin-top: 12px; }
+.e-formas .tools, .e-formas .url { color: var(--c-muted); }
+
 /* ---------- capa de control: lo que tapa LinkedIn (solo en «-zonas») ---------- */
 .zones { display: none; }
 body.zonas .zones { display: block; }

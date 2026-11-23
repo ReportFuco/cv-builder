@@ -1,6 +1,6 @@
 """Genera el banner de LinkedIn (1584 × 396) de una versión de CV, con su mismo tema (paleta y fuentes).
 
-    python banner.py perfiles/<persona>/cvs/<version>.yaml [--estilo cifras|ruta|frase|todos]
+    python banner.py perfiles/<persona>/cvs/<version>.yaml [--estilo cifras|ruta|frase|formas|todos]
                      [--paleta <nombre>] [--fuentes <nombre>]
 
 Salida en cvs/salida/banner/:
@@ -8,7 +8,7 @@ Salida en cvs/salida/banner/:
   <version>-<estilo>-zonas.png   la misma imagen marcando lo que tapa LinkedIn (foto de perfil y bordes)
 
 El contenido sale de la versión: titular (`label`), herramientas, resumen, trayectoria (`work`) y, si existe, la clave
-`banner` (`estilo`, `titulo`, `herramientas`, `frase`, `cifras`, `ruta`, `url`, `tema`). Las cifras no se inventan:
+`banner` (`estilo`, `antetitulo`, `titulo`, `herramientas`, `frase`, `cifras`, `ruta`, `url`, `tema`). Las cifras no se inventan:
 si no hay `banner.cifras`, el estilo «cifras» muestra la frase y el chequeo sugiere candidatas desde los logros.
 Al final imprime el chequeo: texto bajo la foto o en los bordes, texto cortado y letra demasiado chica.
 """
@@ -30,7 +30,7 @@ R = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(R)                     # temas y utilidades compartidas con el CV
 
 BANNERS = HERE.parent / "banners"
-ESTILOS = ("cifras", "ruta", "frase")
+ESTILOS = ("cifras", "ruta", "frase", "formas")
 W, H = 1584, 396
 PHOTO = (40 + 160, 160 + 160, 160)              # centro x, centro y, radio: foto de perfil en escritorio (aprox.)
 EDGE = 80                                       # márgenes laterales que el celular puede recortar
@@ -90,8 +90,10 @@ def contexto(profile: dict, version: dict, estilo: str) -> dict:
     rol, _, tools = label.partition("|")
     perfiles = profile["basics"].get("profiles") or []
     url_def = next((p["url"] for p in perfiles if p.get("network") == "GitHub"), None)
+    actual = next((w for w in profile.get("work", []) if not w.get("endDate")), None)
     return {
         "estilo": estilo, "lang": version.get("idioma", "es"),
+        "antetitulo": spec.get("antetitulo") or (actual or {}).get("name", ""),
         "titulo": spec.get("titulo") or rol.strip(),
         "herramientas": spec.get("herramientas") or [t.strip() for t in tools.split(",") if t.strip()],
         "frase": spec.get("frase") or first_sentence(version.get("summary")),

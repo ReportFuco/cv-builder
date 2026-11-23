@@ -10,10 +10,20 @@
 <div class="canvas">
   <div class="deco" aria-hidden="true">
     {% if estilo == 'ruta' %}<div class="orb"></div><div class="orb small"></div>{% endif %}
+    {%- if estilo == 'formas' %}
+    {#- Barras redondeadas que suben (un gráfico), con un punto encima de la última y un cuarto de círculo. -#}
+    <div class="shape q"></div>
+    <div class="shape b1"></div><div class="shape b2"></div><div class="shape b3"></div><div class="shape b4"></div>
+    <div class="shape dot1"></div>
+    {%- endif %}
   </div>
 
   <div class="content">
-    {% if estilo == 'frase' %}
+    {% if estilo == 'formas' %}
+      {% if antetitulo %}<p class="eyebrow">{{ antetitulo }}</p>{% endif %}
+      <h1>{{ titulo }}</h1>
+      {% if herramientas %}<p class="tools">{{ herramientas | join(' · ') }}</p>{% endif %}
+    {% elif estilo == 'frase' %}
       <p class="eyebrow">{{ titulo }}</p>
       <p class="frase">{{ frase }}</p>
       {% if herramientas %}<p class="tools">{{ herramientas | join(' · ') }}</p>{% endif %}

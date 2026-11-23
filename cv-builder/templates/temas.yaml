@@ -13,6 +13,7 @@ paletas:
   bosque:   { nombre: Verde bosque, primary: "#1F4D3A", secondary: "#3B7458", soft: "#A8CDB8", ink: "#1E2A24", muted: "#56665D", rule: "#D3DED7", paper: "#FFFFFF", panel: "#F2F7F4" }
   burdeos:  { nombre: Burdeos,      primary: "#5A1E2C", secondary: "#8A3A4A", soft: "#E3B6BF", ink: "#2A1C20", muted: "#6B565B", rule: "#E5D5D8", paper: "#FFFFFF", panel: "#FBF5F6" }
   grafito:  { nombre: Grafito,      primary: "#2B2F36", secondary: "#4F5763", soft: "#B9C0CA", ink: "#1F2328", muted: "#5E6672", rule: "#D9DDE2", paper: "#FFFFFF", panel: "#F4F5F7" }
+  lima:     { nombre: Lima,         primary: "#3A7A12", secondary: "#4E9A1F", soft: "#C6E600", ink: "#1E2A16", muted: "#56624B", rule: "#DDE9C8", paper: "#FFFFFF", panel: "#F5FAEA" }
   indigo:   { nombre: Índigo,       primary: "#28306B", secondary: "#4A53A3", soft: "#B8BDEB", ink: "#1E2033", muted: "#5C5F75", rule: "#D8DAEC", paper: "#FFFFFF", panel: "#F5F5FC" }
 
 fuentes:

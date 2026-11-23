@@ -70,12 +70,12 @@ chequeo ATS al lado. «Guardar» escribe solo `plantilla`, `tema`, `foto` y `bre
 ### 5c. Banner de LinkedIn (opcional)
 
 ```
-python <skill>/scripts/banner.py perfiles/<persona>/cvs/<objetivo>.yaml [--estilo cifras|ruta|frase]
+python <skill>/scripts/banner.py perfiles/<persona>/cvs/<objetivo>.yaml [--estilo cifras|ruta|frase|formas]
 ```
 
 1584 × 396 con el mismo tema del CV, en `cvs/salida/banner/` (`<version>-<estilo>.png` para subir, al doble de
 resolución, y `-zonas.png` marcando lo que tapa la foto de perfil). Estilos: **cifras** (3 logros con número),
-**ruta** (trayectoria por empresa) y **frase** (el resumen). Las cifras se escriben en `banner.cifras` de la versión
+**ruta** (trayectoria por empresa), **frase** (el resumen) y **formas** (barras redondeadas con degradé, antetítulo con la empresa). Las cifras se escriben en `banner.cifras` de la versión
 tomándolas del perfil (el script sugiere candidatas): nunca se inventan. El chequeo marca texto bajo la foto,
 en los bordes que recorta el celular, cortado o menor a 22 px.
 

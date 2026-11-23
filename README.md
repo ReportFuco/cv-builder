@@ -31,14 +31,24 @@ infraestructura).
 
 ## Instalar como skill
 
+Necesitas **Claude Code** (la terminal o la pestaña Code de la app de escritorio): la skill corre scripts de Python y
+Chrome en tu computador, cosa que el chat web no puede hacer.
+
 ```bash
-git clone https://github.com/<usuario>/<repo>.git
-# Opción A: solo en este proyecto → ya funciona (Claude Code lee cv-builder/SKILL.md desde aquí)
-# Opción B: para todos tus proyectos
-cp -r cv-builder ~/.claude/skills/cv-builder
+git clone <url-de-este-repositorio> cv-builder
+cd cv-builder
+pip install -r cv-builder/scripts/requirements.txt
+python -m playwright install chromium
+# Registrar la skill para tu usuario (Claude Code las busca en ~/.claude/skills/<nombre>/SKILL.md)
+cp -r cv-builder ~/.claude/skills/cv-builder          # Windows: xcopy /E /I cv-builder %USERPROFILE%\.claude\skills\cv-builder
 ```
 
-Después basta pedirle a Claude Code algo como «hazme un CV para un cargo de analista de datos» y la skill guía el resto.
+O más fácil: abre Claude Code en una carpeta vacía y pídele «instala la skill de
+<url-de-este-repositorio> siguiendo su README».
+
+Después, abre Claude Code **en la carpeta clonada** (ahí se crean tus `perfiles/`) y pídele algo como «hazme un CV
+para un cargo de analista de datos»: la skill pregunta qué buscas y guía el resto. Para traer mejoras de la skill:
+`git pull` y vuelve a copiar `cv-builder/` a `~/.claude/skills/`. Tus perfiles no se tocan ni se suben.
 
 ## Probar con la persona de ejemplo
 

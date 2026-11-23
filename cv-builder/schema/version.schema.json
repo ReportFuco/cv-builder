@@ -100,7 +100,8 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "estilo": { "enum": ["cifras", "ruta", "frase"], "description": "Si falta, se generan los tres." },
+        "estilo": { "enum": ["cifras", "ruta", "frase", "formas"], "description": "Si falta, se generan todos." },
+        "antetitulo": { "type": "string", "description": "Línea chica sobre el título (estilo formas). Por defecto, la empresa del cargo actual." },
         "titulo": { "type": "string", "description": "Por defecto, el label antes de «|»." },
         "herramientas": { "type": "array", "items": { "type": "string" }, "maxItems": 4 },
         "frase": { "type": "string", "maxLength": 140, "description": "Por defecto, la primera oración del summary. Ideal < 100 caracteres." },

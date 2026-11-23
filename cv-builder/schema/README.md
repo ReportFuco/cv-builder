@@ -75,7 +75,7 @@ Cada clave está implementada en `scripts/render.py`. Si se agrega una allá, se
 | `project_highlights` | logros por proyecto cuando no se fija `max` (0 = solo descripción) |
 | `skills`, `skills_omit` | grupos del perfil en orden; herramientas que no se muestran |
 | `max_certificates` | cuántos certificados (los `always` van primero) |
-| `banner` | banner de LinkedIn: `{estilo, titulo, herramientas, frase, cifras: [{valor, texto}], ruta, url, tema}`; todo opcional (ver `scripts/banner.py`) |
+| `banner` | banner de LinkedIn: `{estilo, antetitulo, titulo, herramientas, frase, cifras: [{valor, texto}], ruta, url, tema}`; todo opcional (ver `scripts/banner.py`) |
 
 Pendiente (no implementado): `sensitive` para RUT, fecha de nacimiento o dirección cuando el aviso los exige
 (universidades, sector público).
